@@ -31,12 +31,14 @@ public class CadastroUsuario extends javax.swing.JDialog {
         botaoCadastrar = new javax.swing.JButton();
         labelAutor = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        textLoginAdmin = new javax.swing.JTextField();
+        textNome = new javax.swing.JTextField();
         labelLogin = new javax.swing.JLabel();
         labelSenha = new javax.swing.JLabel();
         textSenhaNovo = new javax.swing.JPasswordField();
         textLogin = new javax.swing.JTextField();
         labelNome = new javax.swing.JLabel();
+        labelLogin2 = new javax.swing.JLabel();
+        textEmail = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         comboTipo1 = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
@@ -77,6 +79,10 @@ public class CadastroUsuario extends javax.swing.JDialog {
         labelNome.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         labelNome.setText("LOGIN:");
 
+        labelLogin2.setBackground(new java.awt.Color(0, 0, 0));
+        labelLogin2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        labelLogin2.setText("EMAIL:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -97,7 +103,11 @@ public class CadastroUsuario extends javax.swing.JDialog {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(labelLogin)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(textLoginAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(textNome, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(labelLogin2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(textEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -105,8 +115,10 @@ public class CadastroUsuario extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(textLoginAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelLogin))
+                    .addComponent(textNome, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelLogin)
+                    .addComponent(labelLogin2)
+                    .addComponent(textEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(7, 7, 7)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelNome)
@@ -173,9 +185,9 @@ public class CadastroUsuario extends javax.swing.JDialog {
                                 .addComponent(comboTipo3, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(63, 63, 63)
+                                .addGap(49, 49, 49)
                                 .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGap(18, 18, 18)
                                 .addComponent(comboTipo2, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(54, 54, 54)
@@ -319,11 +331,13 @@ public class CadastroUsuario extends javax.swing.JDialog {
     private javax.swing.JLabel labelAutor;
     private javax.swing.JLabel labelLogin;
     private javax.swing.JLabel labelLogin1;
+    private javax.swing.JLabel labelLogin2;
     private javax.swing.JLabel labelNome;
     private javax.swing.JLabel labelSenha;
+    private javax.swing.JTextField textEmail;
     private javax.swing.JTextField textIdade;
     private javax.swing.JTextField textLogin;
-    private javax.swing.JTextField textLoginAdmin;
+    private javax.swing.JTextField textNome;
     private javax.swing.JTextField textSenhaNovo;
     // End of variables declaration//GEN-END:variables
 }
