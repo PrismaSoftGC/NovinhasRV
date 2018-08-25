@@ -59,6 +59,11 @@ public class Login extends javax.swing.JFrame {
         });
 
         btnLogin.setText("ENTRAR");
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginActionPerformed(evt);
+            }
+        });
 
         jLabel5.setForeground(new java.awt.Color(0, 51, 204));
         jLabel5.setText("Esqueci minha senha");
@@ -133,13 +138,19 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
-        // TODO add your handling code here:
+        EsqueceuSenha cadUser = new EsqueceuSenha(this,true);
+        cadUser.setVisible(true);
     }//GEN-LAST:event_jLabel5MouseClicked
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
         CadastroUsuario cadUser = new CadastroUsuario(this,true);
         cadUser.setVisible(true);
     }//GEN-LAST:event_btnCadastrarActionPerformed
+ 
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        Inicio inicio = new Inicio();
+        inicio.setVisible(true);
+    }//GEN-LAST:event_btnLoginActionPerformed
 
     /**
      * @param args the command line arguments
