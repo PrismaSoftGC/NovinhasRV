@@ -46,7 +46,7 @@ public class Perfil extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         textNome = new javax.swing.JTextField();
         labelLogin = new javax.swing.JLabel();
-        textEmail2 = new javax.swing.JTextField();
+        textIdade = new javax.swing.JTextField();
         labelLogin6 = new javax.swing.JLabel();
         textDescricao = new javax.swing.JTextField();
         labelNome2 = new javax.swing.JLabel();
@@ -198,7 +198,7 @@ public class Perfil extends javax.swing.JFrame {
                             .addGap(293, 293, 293)
                             .addComponent(labelLogin6)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(textEmail2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(textIdade, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addContainerGap(77, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
@@ -214,7 +214,7 @@ public class Perfil extends javax.swing.JFrame {
                     .addContainerGap()
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(labelLogin6)
-                        .addComponent(textEmail2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(textIdade, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGap(18, 18, 18)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
@@ -341,7 +341,7 @@ public class Perfil extends javax.swing.JFrame {
     private javax.swing.JLabel labelLogin6;
     private javax.swing.JLabel labelNome2;
     private javax.swing.JTextField textDescricao;
-    private javax.swing.JTextField textEmail2;
+    private javax.swing.JTextField textIdade;
     private javax.swing.JTextField textNome;
     // End of variables declaration//GEN-END:variables
 }

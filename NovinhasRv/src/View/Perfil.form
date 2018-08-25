@@ -347,7 +347,7 @@
                               <EmptySpace min="293" pref="293" max="-2" attributes="0"/>
                               <Component id="labelLogin6" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="textEmail2" min="-2" pref="40" max="-2" attributes="0"/>
+                              <Component id="textIdade" min="-2" pref="40" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace pref="77" max="32767" attributes="0"/>
@@ -370,7 +370,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="labelLogin6" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="textEmail2" alignment="3" min="-2" pref="27" max="-2" attributes="0"/>
+                          <Component id="textIdade" alignment="3" min="-2" pref="27" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -400,7 +400,7 @@
             <Property name="text" type="java.lang.String" value="NOME:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="textEmail2">
+        <Component class="javax.swing.JTextField" name="textIdade">
         </Component>
         <Component class="javax.swing.JLabel" name="labelLogin6">
           <Properties>
