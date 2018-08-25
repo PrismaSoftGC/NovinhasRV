@@ -29,8 +29,8 @@ public class Inicio extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        botaoConversar = new javax.swing.JButton();
+        botaoRecusar = new javax.swing.JButton();
         txtNome = new javax.swing.JLabel();
         txtIdade = new javax.swing.JLabel();
         txtDescrição = new javax.swing.JLabel();
@@ -61,9 +61,14 @@ public class Inicio extends javax.swing.JFrame {
                 .addGap(42, 42, 42))
         );
 
-        jButton1.setText("CONVERSAR");
+        botaoConversar.setText("CONVERSAR");
+        botaoConversar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoConversarActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("RECUSAR");
+        botaoRecusar.setText("RECUSAR");
 
         txtNome.setText("NOME");
 
@@ -126,9 +131,9 @@ public class Inicio extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(78, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(botaoConversar, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(214, 214, 214)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(botaoRecusar, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(94, 94, 94))
         );
         layout.setVerticalGroup(
@@ -144,8 +149,8 @@ public class Inicio extends javax.swing.JFrame {
                 .addComponent(txtDescrição)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(botaoConversar, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(botaoRecusar, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(52, 52, 52))
         );
 
@@ -170,6 +175,11 @@ public class Inicio extends javax.swing.JFrame {
         Sobre sobre = new Sobre(this,true);
         sobre.setVisible(true);
     }//GEN-LAST:event_jMenu2ActionPerformed
+
+    private void botaoConversarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoConversarActionPerformed
+        Chat chat = new Chat();
+        chat.setVisible(true);
+    }//GEN-LAST:event_botaoConversarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -207,8 +217,8 @@ public class Inicio extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton botaoConversar;
+    private javax.swing.JButton botaoRecusar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
