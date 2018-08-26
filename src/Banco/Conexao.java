@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 public class Conexao {
 
   private String driver = "com.mysql.jdbc.Driver";
-  private String url = "jdbc:mysql://localhost:3306/mysql";
+  private String url = "jdbc:mysql://localhost:3306/novinhasrvdb";
   private String usuario = "root";
   private String senha = "";
   public Connection Conexao;
