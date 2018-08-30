@@ -5,18 +5,21 @@
  */
 package View;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author adeja
  */
 public class CadastroUsuario extends javax.swing.JDialog {
 
-    /**
-     * Creates new form CadastroUsuario
-     */
     public CadastroUsuario(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        //Login.getConexaoServidor().getEntrada().readUTF("fsdfsdfsdfsd");
+        //Login.getConexaoServidor().getSaida().writeUTF("fsdfsdfsdfsd");
     }
 
     /**
@@ -319,8 +322,39 @@ public class CadastroUsuario extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastrarActionPerformed
+        byte prefSexo=1;
+         byte prefEsporte=1;
+        byte prefReligioso=1;
+        byte prefMusica=1;
+        byte prefGames=1;
+        byte prefIdade=1;
+        if(comboSexo.getSelectedItem() == "Masculino"){
+            prefSexo=0;
+        }
+        if(comboEsporte.getSelectedItem() == "NÃO"){
+            prefEsporte=0;
+        }
+        if(comboMusica.getSelectedItem() == "NÃO"){
+            prefMusica=0;
+        }
+        if(comboGames.getSelectedItem() == "NÃO"){
+            prefGames=0;
+        }
+        if(comboIdade.getSelectedItem() == "NÃO"){
+            prefIdade=0;
+        }
+        if(comboReligiao.getSelectedItem() == "NÃO"){
+            prefReligioso=0;
+        }
+       
+        UsuarioBEAN usuario = new UsuarioBEAN(0, textNome.getText(), textEmail.getText(), textSenha.getText(), Integer.parseInt(textIdade.getText())
 
-        
+        ,textDescricao.getText(),prefSexo,prefEsporte,prefReligioso,prefMusica,prefGames,prefIdade);
+        try {
+            Login.getConexaoServidor().getSaida().writeObject(usuario);
+        } catch (IOException ex) {
+            Logger.getLogger(CadastroUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botaoCadastrarActionPerformed
 
     /**
@@ -337,16 +371,24 @@ public class CadastroUsuario extends javax.swing.JDialog {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CadastroUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadastroUsuario.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CadastroUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadastroUsuario.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CadastroUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadastroUsuario.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CadastroUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadastroUsuario.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
