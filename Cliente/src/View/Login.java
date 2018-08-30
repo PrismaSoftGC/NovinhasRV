@@ -5,17 +5,40 @@
  */
 package View;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Felipe Peretti
  */
 public class Login extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Login
-     */
+    
+    private Socket servidor;
+    private static ObjectInputStream entarda;
+    private static ObjectOutputStream saida;
+    
+    
     public Login() {
         initComponents();
+        try {
+            servidor=new Socket("192.168.137.56",3312);
+            entarda = new  ObjectInputStream(servidor.getInputStream());
+            saida = new  ObjectOutputStream(servidor.getOutputStream());
+            //saida.writeObject();
+        } catch (IOException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public static Conexao getConexaoServidor(){
+        return new Conexao(saida, entarda);
     }
 
     /**
