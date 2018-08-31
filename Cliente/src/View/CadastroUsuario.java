@@ -5,10 +5,10 @@
  */
 package View;
 
-import Model.UsuarioBEAN;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import webcam.TirarFotoWebcam;
 
 /**
  *
@@ -19,6 +19,7 @@ public class CadastroUsuario extends javax.swing.JDialog {
     public CadastroUsuario(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        setLocationRelativeTo(null);
         //Login.getConexaoServidor().getEntrada().readUTF("fsdfsdfsdfsd");
         //Login.getConexaoServidor().getSaida().writeUTF("fsdfsdfsdfsd");
     }
@@ -61,6 +62,7 @@ public class CadastroUsuario extends javax.swing.JDialog {
         labelNome2 = new javax.swing.JLabel();
         labelLogin6 = new javax.swing.JLabel();
         textIdade = new javax.swing.JTextField();
+        jToggleButton1 = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -96,17 +98,17 @@ public class CadastroUsuario extends javax.swing.JDialog {
                 .addGap(5, 5, 5)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(labelSenha)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(textSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(labelNome)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(textLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(labelLogin2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(textEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(labelLogin2))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(labelSenha)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(textSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(textEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -241,6 +243,13 @@ public class CadastroUsuario extends javax.swing.JDialog {
         labelLogin6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         labelLogin6.setText("IDADE:");
 
+        jToggleButton1.setText("Tirar Foto");
+        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -259,7 +268,9 @@ public class CadastroUsuario extends javax.swing.JDialog {
                         .addGap(10, 10, 10)
                         .addComponent(labelLogin6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(textIdade, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(textIdade, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(45, 45, 45)
+                        .addComponent(jToggleButton1)))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -270,7 +281,8 @@ public class CadastroUsuario extends javax.swing.JDialog {
                     .addComponent(textNome, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelLogin5)
                     .addComponent(labelLogin6)
-                    .addComponent(textIdade, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(textIdade, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jToggleButton1))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
@@ -362,6 +374,11 @@ public class CadastroUsuario extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_botaoCadastrarActionPerformed
 
+    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+        new TirarFotoWebcam(this).setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_jToggleButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -427,29 +444,21 @@ public class CadastroUsuario extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JLabel labelAutor;
     private javax.swing.JLabel labelLogin1;
     private javax.swing.JLabel labelLogin2;
-    private javax.swing.JLabel labelLogin3;
-    private javax.swing.JLabel labelLogin4;
     private javax.swing.JLabel labelLogin5;
     private javax.swing.JLabel labelLogin6;
     private javax.swing.JLabel labelNome;
-    private javax.swing.JLabel labelNome1;
     private javax.swing.JLabel labelNome2;
     private javax.swing.JLabel labelSenha;
-    private javax.swing.JLabel labelSenha1;
     private javax.swing.JTextField textDescricao;
     private javax.swing.JTextField textEmail;
-    private javax.swing.JTextField textEmail1;
     private javax.swing.JTextField textIdade;
     private javax.swing.JTextField textLogin;
-    private javax.swing.JTextField textLogin1;
     private javax.swing.JTextField textNome;
-    private javax.swing.JTextField textNome1;
     private javax.swing.JTextField textSenha;
-    private javax.swing.JTextField textSenhaNovo1;
     // End of variables declaration//GEN-END:variables
 }
