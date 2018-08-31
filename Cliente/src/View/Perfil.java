@@ -159,6 +159,11 @@ public class Perfil extends javax.swing.JFrame {
         );
 
         botaoAtualizar.setText("ATUALIZA");
+        botaoAtualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoAtualizarActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("FOTO");
 
@@ -251,11 +256,11 @@ public class Perfil extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(249, 249, 249)
-                        .addComponent(botaoAtualizar))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(233, 233, 233)
-                        .addComponent(labelAutor)))
+                        .addComponent(labelAutor))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(277, 277, 277)
+                        .addComponent(botaoAtualizar)))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -270,9 +275,9 @@ public class Perfil extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
+                .addGap(27, 27, 27)
                 .addComponent(botaoAtualizar)
-                .addGap(38, 38, 38))
+                .addGap(44, 44, 44))
         );
 
         pack();
@@ -282,6 +287,10 @@ public class Perfil extends javax.swing.JFrame {
         EscolherFoto escolher = new EscolherFoto(this,true);
         escolher.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void botaoAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAtualizarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_botaoAtualizarActionPerformed
 
     /**
      * @param args the command line arguments
