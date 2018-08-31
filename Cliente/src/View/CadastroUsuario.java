@@ -5,6 +5,7 @@
  */
 package View;
 
+import Model.UsuarioBEAN;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -322,35 +323,39 @@ public class CadastroUsuario extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastrarActionPerformed
-        byte prefSexo=1;
-         byte prefEsporte=1;
-        byte prefReligioso=1;
-        byte prefMusica=1;
-        byte prefGames=1;
-        byte prefIdade=1;
-        if(comboSexo.getSelectedItem() == "Masculino"){
-            prefSexo=0;
-        }
-        if(comboEsporte.getSelectedItem() == "NÃO"){
-            prefEsporte=0;
-        }
-        if(comboMusica.getSelectedItem() == "NÃO"){
-            prefMusica=0;
-        }
-        if(comboGames.getSelectedItem() == "NÃO"){
-            prefGames=0;
-        }
-        if(comboIdade.getSelectedItem() == "NÃO"){
-            prefIdade=0;
-        }
-        if(comboReligiao.getSelectedItem() == "NÃO"){
-            prefReligioso=0;
-        }
-       
-        UsuarioBEAN usuario = new UsuarioBEAN(0, textNome.getText(), textEmail.getText(), textSenha.getText(), Integer.parseInt(textIdade.getText())
-
-        ,textDescricao.getText(),prefSexo,prefEsporte,prefReligioso,prefMusica,prefGames,prefIdade);
         try {
+            byte prefSexo = 1;
+            byte prefEsporte = 1;
+            byte prefReligioso = 1;
+            byte prefMusica = 1;
+            byte prefGames = 1;
+            byte prefIdade = 1;
+            if (comboSexo.getSelectedItem() == "Masculino") {
+                prefSexo = 0;
+            }
+            if (comboEsporte.getSelectedItem() == "NÃO") {
+                prefEsporte = 0;
+            }
+            if (comboMusica.getSelectedItem() == "NÃO") {
+                prefMusica = 0;
+            }
+            if (comboGames.getSelectedItem() == "NÃO") {
+                prefGames = 0;
+            }
+            if (comboIdade.getSelectedItem() == "NÃO") {
+                prefIdade = 0;
+            }
+            if (comboReligiao.getSelectedItem() == "NÃO") {
+                prefReligioso = 0;
+            }
+            UsuarioBEAN usuario = new UsuarioBEAN(0, textNome.getText(), textEmail.getText(), textSenha.getText(), Integer.parseInt(textIdade.getText()),
+                     textDescricao.getText(), prefSexo, prefEsporte, prefReligioso, prefMusica, prefGames, prefIdade);
+
+            Conexao conexao = Login.getConexaoServidor();
+            conexao.getSaida().writeUTF("CRIAR");
+            conexao.getSaida().writeObject(usuario);
+            conexao.getSaida().flush();
+             //conexao.getSaida().writeUTF("SAIR");
             Login.getConexaoServidor().getSaida().writeObject(usuario);
         } catch (IOException ex) {
             Logger.getLogger(CadastroUsuario.class.getName()).log(Level.SEVERE, null, ex);

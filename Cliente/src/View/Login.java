@@ -28,7 +28,7 @@ public class Login extends javax.swing.JFrame {
     public Login() {
         initComponents();
         try {
-            servidor=new Socket("192.168.137.56",3312);
+            servidor=new Socket("192.168.137.102",3312);
             entarda = new  ObjectInputStream(servidor.getInputStream());
             saida = new  ObjectOutputStream(servidor.getOutputStream());
             //saida.writeObject();
