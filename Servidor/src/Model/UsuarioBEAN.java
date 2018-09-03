@@ -1,7 +1,9 @@
 
-package Servidor;
+package Model;
 
-public class UsuarioBEAN {
+import java.io.Serializable;
+
+public class UsuarioBEAN implements Serializable{
     
     private int id;
     private String nome;

@@ -12,19 +12,16 @@ import java.util.logging.Logger;
 public class Servidor {
     public static void main(String[] args) throws IOException {
         ServerSocket server = new ServerSocket(3312);
-        new Thread(new Runnable() {
-            @Override
-            public void run() { 
-                while (true){
-                    try {
-                        Socket client = server.accept();
-                        if (client != null) {
-                            new Sala(client);
-                        }
-                    } catch (IOException ex) {
-                        Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
+        new Thread(() -> {
+            while (true){
+                try {
+                    Socket client = server.accept();
+                    if (client != null) {
+                        new Sala(client);
                     }
-                }   
+                } catch (IOException ex) {   
+                    Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

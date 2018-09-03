@@ -1,6 +1,7 @@
 
 package Servidor;
 
+import Model.UsuarioBEAN;
 import java.util.ArrayList;
 
 public class Controller {
