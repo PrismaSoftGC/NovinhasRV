@@ -36,7 +36,7 @@ public class Sobre extends javax.swing.JDialog {
         labelAutor.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         labelAutor.setText("Sobre");
 
-        jLabel1.setText("Sistema desenvolvido para a materia que não lembro o nome");
+        jLabel1.setText("Sistema desenvolvido para nota da N1");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -50,7 +50,7 @@ public class Sobre extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel1)))
-                .addContainerGap(99, Short.MAX_VALUE))
+                .addContainerGap(164, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
