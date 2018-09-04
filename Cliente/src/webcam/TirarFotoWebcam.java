@@ -2,6 +2,7 @@
 package webcam;
 
 import View.CadastroUsuario;
+import View.EscolherCaminhoSalvarFoto;
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamResolution;
 import java.awt.Dimension;
@@ -11,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileWriter;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
@@ -135,7 +137,7 @@ public class TirarFotoWebcam extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
                         .addComponent(labelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(36, 36, 36)))
-                .addContainerGap(44, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         jLayeredPane1Layout.setVerticalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -147,7 +149,7 @@ public class TirarFotoWebcam extends javax.swing.JFrame {
                     .addComponent(botaoCamera)
                     .addComponent(botaoTirarFoto)
                     .addComponent(botaoCancelar))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -161,10 +163,7 @@ public class TirarFotoWebcam extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLayeredPane1)
-                .addContainerGap())
+            .addComponent(jLayeredPane1)
         );
 
         pack();
@@ -195,7 +194,10 @@ public class TirarFotoWebcam extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoCancelarActionPerformed
 
     private void botaoTirarFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoTirarFotoActionPerformed
-         try {
+        EscolherCaminhoSalvarFoto escolher = new EscolherCaminhoSalvarFoto(this,true);
+        escolher.setVisible(true);
+        String caminho = escolher.caminho();
+        try {
              ByteArrayOutputStream buff = new ByteArrayOutputStream();
              ImageIO.write(webcam.getImage(), "jpg", buff);
              byte[] bytes = buff.toByteArray();
@@ -207,7 +209,7 @@ public class TirarFotoWebcam extends javax.swing.JFrame {
              BufferedImage new_img = new BufferedImage(novaLargura, novaAltura, BufferedImage.TYPE_INT_RGB);
              Graphics2D g = new_img.createGraphics();
              g.drawImage(imagem, 0, 0, novaLargura, novaAltura, null);
-             ImageIO.write(new_img, "jpg", new File("C:\\FotoUsuario\\FotoUsuario.jpg"));
+             ImageIO.write(new_img, "jpg", new File(caminho+"\\FotoUsuario.jpg"));
          } catch (Exception e) {
              System.out.println(e.getMessage());
          }
