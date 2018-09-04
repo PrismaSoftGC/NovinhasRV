@@ -3,9 +3,11 @@ package Model;
 
 import java.io.Serializable;
 
-public class UsuarioBEAN implements Serializable{
+
+public class UsuarioBEAN implements Serializable {
     
     private int id;
+    private String login;
     private String nome;
     private String email;
     private String senha;
@@ -18,8 +20,9 @@ public class UsuarioBEAN implements Serializable{
     private byte prefGames;
     private byte prefIdade;
 
-    public UsuarioBEAN(int id, String nome, String email, String senha, int idade, String descricao, byte prefSexo, byte prefEsporte, byte prefReligioso, byte prefMusica, byte prefGames, byte prefIdade) {
+    public UsuarioBEAN(int id, String login,String nome, String email, String senha, int idade, String descricao, byte prefSexo, byte prefEsporte, byte prefReligioso, byte prefMusica, byte prefGames, byte prefIdade) {
         this.id = id;
+        this.login = login;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
@@ -33,8 +36,9 @@ public class UsuarioBEAN implements Serializable{
         this.prefIdade = prefIdade;
     }
 
-    public UsuarioBEAN(String nome, String email, String senha, int idade, String descricao, byte prefSexo, byte prefEsporte, byte prefReligioso, byte prefMusica, byte prefGames, byte prefIdade) {
+    public UsuarioBEAN(String nome, String login,String email, String senha, int idade, String descricao, byte prefSexo, byte prefEsporte, byte prefReligioso, byte prefMusica, byte prefGames, byte prefIdade) {
         this.nome = nome;
+        this.login = login;
         this.email = email;
         this.senha = senha;
         this.idade = idade;
@@ -47,6 +51,14 @@ public class UsuarioBEAN implements Serializable{
         this.prefIdade = prefIdade;
     }
 
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+    
     public int getId() {
         return id;
     }
@@ -142,6 +154,5 @@ public class UsuarioBEAN implements Serializable{
     public void setPrefIdade(byte prefIdade) {
         this.prefIdade = prefIdade;
     }
-
     
 }
