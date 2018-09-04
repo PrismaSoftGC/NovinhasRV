@@ -5,7 +5,10 @@
  */
 package View;
 
+import Model.UsuarioBEAN;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import webcam.TirarFotoWebcam;
@@ -163,7 +166,7 @@ public class CadastroUsuario extends javax.swing.JDialog {
         labelLogin1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         labelLogin1.setText("IDADE:");
 
-        comboIdade.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "18-29", "30-39", "40-49", "50-59", "+60" }));
+        comboIdade.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SIM", "NÃO" }));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -360,7 +363,7 @@ public class CadastroUsuario extends javax.swing.JDialog {
             if (comboReligiao.getSelectedItem() == "NÃO") {
                 prefReligioso = 0;
             }
-            UsuarioBEAN usuario = new UsuarioBEAN(0, textNome.getText(), textEmail.getText(), textSenha.getText(), Integer.parseInt(textIdade.getText()),
+            UsuarioBEAN usuario = new UsuarioBEAN(0, textLogin.getText(),textNome.getText(), textEmail.getText(), textSenha.getText(), Integer.parseInt(textIdade.getText()),
                      textDescricao.getText(), prefSexo, prefEsporte, prefReligioso, prefMusica, prefGames, prefIdade);
 
             Conexao conexao = Login.getConexaoServidor();
@@ -369,6 +372,13 @@ public class CadastroUsuario extends javax.swing.JDialog {
             conexao.getSaida().flush();
              //conexao.getSaida().writeUTF("SAIR");
             Login.getConexaoServidor().getSaida().writeObject(usuario);
+            FileInputStream file = new FileInputStream("C:\\Users\\adeja\\Desktop\\FotoUsuario.jpg");
+            byte[] buf = new byte[4096];
+            while(true){
+                int len = file.read(buf);
+                if(len == -1) break;
+                conexao.getSaida().write(buf,0,len);
+            }
         } catch (IOException ex) {
             Logger.getLogger(CadastroUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
