@@ -1,6 +1,8 @@
 package Servidor;
 
 import Model.UsuarioBEAN;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -13,8 +15,10 @@ import javax.swing.JOptionPane;
 public class EspaçoCliente extends Thread{
     
     private Socket cliente=null;
-    private static ObjectInputStream entrada=null;
-    private static ObjectOutputStream saida=null;
+    private static DataInputStream entrada=null;
+    private static DataOutputStream saida=null;
+     private static ObjectOutputStream saidaObjeto=null;
+    private static ObjectInputStream entradaObjeto=null;
     private String comando;
     private Controller controle;
     
@@ -22,8 +26,8 @@ public class EspaçoCliente extends Thread{
         this.controle = new Controller();
         this.cliente=cliente;
         try {
-            saida = new ObjectOutputStream(cliente.getOutputStream());
-            entrada = new ObjectInputStream(cliente.getInputStream());    
+            saida = new DataOutputStream(cliente.getOutputStream());
+            entrada = new DataInputStream(cliente.getInputStream());
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Erro: "+ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
@@ -37,10 +41,11 @@ public class EspaçoCliente extends Thread{
     public synchronized void acao(){
         while(true){
             try {
+                System.out.println("AQUI, Parado ...");
                 comando = entrada.readUTF();
-                
+                System.out.println("Não libera");
                 if (comando.contains("CRIAR")) {
-                    UsuarioBEAN aux = (UsuarioBEAN) entrada.readObject();
+                    UsuarioBEAN aux = (UsuarioBEAN) entradaObjeto.readObject();
                     if (notNull(aux)) {
                         boolean retorno = gravarUsuario(aux);
                         saida.writeBoolean(retorno);
@@ -51,8 +56,8 @@ public class EspaçoCliente extends Thread{
                 if (comando.contains("ATUALIZAR")) {
                     UsuarioBEAN aux1 = buscarUsuario(entrada.readInt());
                     if (notNull(aux1)) {
-                        saida.writeObject(aux1); // Envia informaçoes do usuario
-                        UsuarioBEAN aux = (UsuarioBEAN) entrada.readObject();
+                        saidaObjeto.writeObject(aux1); // Envia informaçoes do usuario
+                        UsuarioBEAN aux = (UsuarioBEAN) entradaObjeto.readObject();
                         if (notNull(aux)) {
                            boolean retorno = atualizarUsuario(aux);
                            saida.writeBoolean(retorno); 
@@ -64,24 +69,25 @@ public class EspaçoCliente extends Thread{
                     }
                 }else 
                 if (comando.contains("BUSCAR USUARIO")) {
+                    System.out.println("ENTRA");
                     String login = entrada.readUTF();
-                    String senha = senhaToMd5(entrada.readUTF());
+                    //String senha = senhaToMd5(entrada.readUTF());
+                    String senha = entrada.readUTF();
                     UsuarioBEAN aux = buscarUsuario(login, senha);
                     if (notNull(aux)) {
-                        saida.writeObject(aux);
+                        saidaObjeto.writeObject(aux);
                     }else{
-                        saida.writeObject(null);
+                        saidaObjeto.writeObject(null);
                     }
                 }else
                 if (comando.contains("ENCONTRAR")) {
-                    UsuarioBEAN aux = (UsuarioBEAN) entrada.readObject();
+                    UsuarioBEAN aux = (UsuarioBEAN) entradaObjeto.readObject();
                     if (notNull(aux)) {
-                        saida.writeObject(encontrarCompanhia(aux));
+                        saidaObjeto.writeObject(encontrarCompanhia(aux));
                     }
-                }
-                               
+                }              
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Erro: "+ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                
             }    
         }
     }
@@ -126,7 +132,7 @@ public class EspaçoCliente extends Thread{
     private UsuarioBEAN buscarUsuario(String login, String senha){
         ArrayList<UsuarioBEAN> usuarios = controle.listaUsuarios();
         for(UsuarioBEAN usuario : usuarios){
-            if (usuario.getEmail().equals(login) && usuario.getSenha().equals(senha)) {
+            if (usuario.getLogin().equals(login) && usuario.getSenha().equals(senha)) {
                 return usuario;
             }
         }

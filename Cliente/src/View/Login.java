@@ -6,6 +6,8 @@
 package View;
 
 import Model.UsuarioBEAN;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -22,16 +24,21 @@ import javax.swing.JOptionPane;
 public class Login extends javax.swing.JFrame {
 
     private Socket servidor;
-    private static ObjectInputStream entarda;
-    private static ObjectOutputStream saida;
-    private Conexao conexao = Login.getConexaoServidor();
+    private static DataInputStream entrada;
+    private static DataOutputStream saida;
+    private static ObjectOutputStream saidaObjeto;
+    private static ObjectInputStream entradaObjeto;
+    private Conexao conexao;
 
     public Login() {
         initComponents();
         try {
-            servidor = new Socket("10.10.40.114", 3312);
-            entarda = new ObjectInputStream(servidor.getInputStream());
-            saida = new ObjectOutputStream(servidor.getOutputStream());
+            servidor = new Socket("localhost", 3312);
+            entrada = new DataInputStream(servidor.getInputStream());
+            saida = new DataOutputStream(servidor.getOutputStream());
+            entradaObjeto = new ObjectInputStream(servidor.getInputStream());
+            saidaObjeto = new ObjectOutputStream(servidor.getOutputStream());
+            conexao = this.getConexaoServidor();
         } catch (IOException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -39,7 +46,7 @@ public class Login extends javax.swing.JFrame {
     }
 
     public static Conexao getConexaoServidor() {
-        return new Conexao(saida, entarda);
+        return new Conexao(saida, entrada,saidaObjeto,entradaObjeto);
     }
 
     /**
@@ -174,18 +181,20 @@ public class Login extends javax.swing.JFrame {
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         try {
             conexao.getSaida().writeUTF("BUSCAR USUARIO");
-            conexao.getSaida().writeUTF(textLogin.getText());
-            UsuarioBEAN usuario = (UsuarioBEAN) conexao.getEntrada().readObject();
-            if (usuario == null) {
-                JOptionPane.showMessageDialog(null, "USUARIO NÃO CADASTRADO");
-            } else {
-                Inicio inicio = new Inicio(usuario);
-                inicio.setVisible(true);
-            }
+            //conexao.getSaida().writeUTF("BUSCAR USUARIO");
+           //conexao.getSaida().writeUTF(textLogin.getText());
+//            conexao.getSaida().writeUTF(textSenha.getText());
+//            UsuarioBEAN usuario = (UsuarioBEAN) conexao.getEntrada().readObject();
+//            if (usuario == null) {
+//                JOptionPane.showMessageDialog(null, "USUARIO NÃO CADASTRADO");
+//            } else {
+//                Inicio inicio = new Inicio(usuario);
+//                inicio.setVisible(true);
+//            }
         } catch (IOException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (ClassNotFoundException ex) {
+//            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
