@@ -52,7 +52,7 @@ public class UsuarioDAO {
         rs = MySQLDAO.getResultSet(query);
         try {
             while (rs.next()) {
-                lista.add(new UsuarioBEAN(rs.getInt("idusuario"), rs.getString("nome"), rs.getString("email"), rs.getString("senha"), rs.getInt("idade"), rs.getString("descricao"),
+                lista.add(new UsuarioBEAN(rs.getInt("idusuario"), rs.getString("login"),rs.getString("nome"), rs.getString("email"), rs.getString("senha"), rs.getInt("idade"), rs.getString("descricao"),
                           rs.getByte("prefSexo"), rs.getByte("prefEsporte"), rs.getByte("prefReligioso"), rs.getByte("prefMusica"), rs.getByte("prefGames"), rs.getByte("prefIdade")));
             }
             rs.close();
@@ -68,7 +68,7 @@ public class UsuarioDAO {
         rs = MySQLDAO.getResultSet("SELECT * FROM USUARIO WHERE idusuario=?", idusuario);
         try {
             if (rs.next()) {
-                result = new UsuarioBEAN(rs.getInt("idusuario"), rs.getString("nome"), rs.getString("email"), rs.getString("senha"), rs.getInt("idade"), rs.getString("descricao"),
+                result = new UsuarioBEAN(rs.getInt("idusuario"),rs.getString("login"),rs.getString("nome"), rs.getString("email"), rs.getString("senha"), rs.getInt("idade"), rs.getString("descricao"),
                           rs.getByte("prefSexo"), rs.getByte("prefEsporte"), rs.getByte("prefReligioso"), rs.getByte("prefMusica"), rs.getByte("prefGames"), rs.getByte("prefIdade"));
             }
             rs.close();
