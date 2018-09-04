@@ -5,6 +5,7 @@
  */
 package View;
 
+import Model.UsuarioBEAN;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -12,6 +13,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -19,25 +21,24 @@ import java.util.logging.Logger;
  */
 public class Login extends javax.swing.JFrame {
 
-    
     private Socket servidor;
     private static ObjectInputStream entarda;
     private static ObjectOutputStream saida;
-    
-    
+    private Conexao conexao = Login.getConexaoServidor();
+
     public Login() {
         initComponents();
         try {
-            servidor=new Socket("192.168.137.102",3312);
-            entarda = new  ObjectInputStream(servidor.getInputStream());
-            saida = new  ObjectOutputStream(servidor.getOutputStream());
-            //saida.writeObject();
+            servidor = new Socket("10.10.40.114", 3312);
+            entarda = new ObjectInputStream(servidor.getInputStream());
+            saida = new ObjectOutputStream(servidor.getOutputStream());
         } catch (IOException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
-    
-    public static Conexao getConexaoServidor(){
+
+    public static Conexao getConexaoServidor() {
         return new Conexao(saida, entarda);
     }
 
@@ -161,18 +162,31 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
-        EsqueceuSenha cadUser = new EsqueceuSenha(this,true);
+        EsqueceuSenha cadUser = new EsqueceuSenha(this, true);
         cadUser.setVisible(true);
     }//GEN-LAST:event_jLabel5MouseClicked
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
-        CadastroUsuario cadUser = new CadastroUsuario(this,true);
+        CadastroUsuario cadUser = new CadastroUsuario(this, true);
         cadUser.setVisible(true);
     }//GEN-LAST:event_btnCadastrarActionPerformed
- 
+
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        Inicio inicio = new Inicio();
-        inicio.setVisible(true);
+        try {
+            conexao.getSaida().writeUTF("BUSCAR USUARIO");
+            conexao.getSaida().writeUTF(textLogin.getText());
+            UsuarioBEAN usuario = (UsuarioBEAN) conexao.getEntrada().readObject();
+            if (usuario == null) {
+                JOptionPane.showMessageDialog(null, "USUARIO NÃO CADASTRADO");
+            } else {
+                Inicio inicio = new Inicio(usuario);
+                inicio.setVisible(true);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnLoginActionPerformed
 
     /**
