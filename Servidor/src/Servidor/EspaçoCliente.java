@@ -28,6 +28,8 @@ public class EspaçoCliente extends Thread{
         try {
             saida = new DataOutputStream(cliente.getOutputStream());
             entrada = new DataInputStream(cliente.getInputStream());
+            saidaObjeto = new ObjectOutputStream(cliente.getOutputStream());
+            entradaObjeto = new ObjectInputStream (cliente.getInputStream());
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Erro: "+ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }

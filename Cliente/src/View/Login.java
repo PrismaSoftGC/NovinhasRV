@@ -180,21 +180,20 @@ public class Login extends javax.swing.JFrame {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         try {
-            conexao.getSaida().writeUTF("BUSCAR USUARIO");
-            //conexao.getSaida().writeUTF("BUSCAR USUARIO");
-           //conexao.getSaida().writeUTF(textLogin.getText());
-//            conexao.getSaida().writeUTF(textSenha.getText());
-//            UsuarioBEAN usuario = (UsuarioBEAN) conexao.getEntrada().readObject();
-//            if (usuario == null) {
-//                JOptionPane.showMessageDialog(null, "USUARIO NÃO CADASTRADO");
-//            } else {
-//                Inicio inicio = new Inicio(usuario);
-//                inicio.setVisible(true);
-//            }
+           conexao.getSaida().writeUTF("BUSCAR USUARIO");
+           conexao.getSaida().writeUTF(textLogin.getText());
+            conexao.getSaida().writeUTF(textSenha.getText());
+            UsuarioBEAN usuario = (UsuarioBEAN) conexao.getEntradaObjeto().readObject();
+            if (usuario == null) {
+                JOptionPane.showMessageDialog(null, "USUARIO NÃO CADASTRADO");
+            } else {
+                Inicio inicio = new Inicio(usuario);
+                inicio.setVisible(true);
+            }
         } catch (IOException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (ClassNotFoundException ex) {
-//            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+           Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
