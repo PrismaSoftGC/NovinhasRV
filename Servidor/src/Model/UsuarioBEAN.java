@@ -4,7 +4,7 @@ package Model;
 import java.io.Serializable;
 
 
-public class UsuarioBEAN implements Serializable {
+public class UsuarioBEAN implements Serializable  {
     
     private int id;
     private String login;
@@ -20,6 +20,8 @@ public class UsuarioBEAN implements Serializable {
     private byte prefGames;
     private byte prefIdade;
 
+     public UsuarioBEAN(){};
+    
     public UsuarioBEAN(int id, String login,String nome, String email, String senha, int idade, String descricao, byte prefSexo, byte prefEsporte, byte prefReligioso, byte prefMusica, byte prefGames, byte prefIdade) {
         this.id = id;
         this.login = login;

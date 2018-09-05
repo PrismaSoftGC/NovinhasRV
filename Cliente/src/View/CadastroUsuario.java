@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import webcam.TirarFotoWebcam;
 
 /**
@@ -85,6 +86,15 @@ public class CadastroUsuario extends javax.swing.JDialog {
         labelSenha.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         labelSenha.setText("SENHA:");
 
+        textSenha.setText("a");
+
+        textLogin.setText("a");
+        textLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textLoginActionPerformed(evt);
+            }
+        });
+
         labelNome.setBackground(new java.awt.Color(0, 0, 0));
         labelNome.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         labelNome.setText("LOGIN:");
@@ -92,6 +102,8 @@ public class CadastroUsuario extends javax.swing.JDialog {
         labelLogin2.setBackground(new java.awt.Color(0, 0, 0));
         labelLogin2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         labelLogin2.setText("EMAIL:");
+
+        textEmail.setText("a");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -234,9 +246,13 @@ public class CadastroUsuario extends javax.swing.JDialog {
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Informações do Perfil"));
 
+        textNome.setText("a");
+
         labelLogin5.setBackground(new java.awt.Color(0, 0, 0));
         labelLogin5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         labelLogin5.setText("NOME:");
+
+        textDescricao.setText("a");
 
         labelNome2.setBackground(new java.awt.Color(0, 0, 0));
         labelNome2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -245,6 +261,8 @@ public class CadastroUsuario extends javax.swing.JDialog {
         labelLogin6.setBackground(new java.awt.Color(0, 0, 0));
         labelLogin6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         labelLogin6.setText("IDADE:");
+
+        textIdade.setText("1");
 
         jToggleButton1.setText("Tirar Foto");
         jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -367,18 +385,25 @@ public class CadastroUsuario extends javax.swing.JDialog {
                      textDescricao.getText(), prefSexo, prefEsporte, prefReligioso, prefMusica, prefGames, prefIdade);
 
             Conexao conexao = Login.getConexaoServidor();
+            conexao.getSaida().flush();
             conexao.getSaida().writeUTF("CRIAR");
-            conexao.getSaida().writeObject(usuario);
+            conexao.getSaida().flush();
+            conexao.getSaidaObjeto().writeObject(usuario);
             conexao.getSaida().flush();
              //conexao.getSaida().writeUTF("SAIR");
-            Login.getConexaoServidor().getSaida().writeObject(usuario);
-            FileInputStream file = new FileInputStream("C:\\Users\\adeja\\Desktop\\FotoUsuario.jpg");
+            if(conexao.getEntrada().readBoolean() == false){
+                JOptionPane.showMessageDialog(null, "ERROR!");
+            }else{
+                JOptionPane.showMessageDialog(null, "CADASTRADO COM SUCESSO");
+                this.setVisible(false);
+            }
+            /*FileInputStream file = new FileInputStream("C:\\Users\\adeja\\Desktop\\FotoUsuario.jpg");
             byte[] buf = new byte[4096];
             while(true){
                 int len = file.read(buf);
                 if(len == -1) break;
                 conexao.getSaida().write(buf,0,len);
-            }
+            }*/
         } catch (IOException ex) {
             Logger.getLogger(CadastroUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -389,55 +414,11 @@ public class CadastroUsuario extends javax.swing.JDialog {
         this.setVisible(false);
     }//GEN-LAST:event_jToggleButton1ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+    private void textLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textLoginActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textLoginActionPerformed
 
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CadastroUsuario.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CadastroUsuario.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CadastroUsuario.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CadastroUsuario.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                CadastroUsuario dialog = new CadastroUsuario(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoCadastrar;

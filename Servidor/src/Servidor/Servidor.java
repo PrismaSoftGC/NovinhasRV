@@ -6,19 +6,22 @@ import javax.swing.JOptionPane;
 public class Servidor {
 
     public static void main(String[] args) {
-        // {
-           // @Override
-            //public void run() {
-                    try {
-                        ServerSocket server = new ServerSocket(3312);
-                        while (true) {
-                            new EspaçoCliente(server.accept()).start();
-                        }
-                    } catch (Exception e) {
-                        JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-                    }
-            //}
-        //});
-
+        
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+               try {
+                  ServerSocket server = new ServerSocket(3312);
+                  while (true) {
+                      System.out.println("esperando");
+                    new EspaçoCliente(server.accept()).start();
+                      System.out.println("recebeu");
+                  }
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }).start();
+        
     }
 }

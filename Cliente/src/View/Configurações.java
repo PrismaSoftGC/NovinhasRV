@@ -49,7 +49,7 @@ public class Configurações extends javax.swing.JFrame {
         textEmail = new javax.swing.JTextField();
         botaoAtualizar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         labelAutor.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         labelAutor.setText("Configurações");
@@ -156,7 +156,7 @@ public class Configurações extends javax.swing.JFrame {
             usuario.setEmail(textEmail.getText());
             usuario.setSenha(textSenha.getText());
             conexao.getSaida().writeUTF("ATUALIZAR");
-            conexao.getSaida().writeObject(usuario);
+            conexao.getSaidaObjeto().writeObject(usuario);
             conexao.getSaida().flush();
         } catch (IOException ex) {
             Logger.getLogger(CadastroUsuario.class.getName()).log(Level.SEVERE, null, ex);

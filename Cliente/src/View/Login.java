@@ -181,8 +181,11 @@ public class Login extends javax.swing.JFrame {
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         try {
            conexao.getSaida().writeUTF("BUSCAR USUARIO");
+           conexao.getSaida().flush();
            conexao.getSaida().writeUTF(textLogin.getText());
+           conexao.getSaida().flush();
             conexao.getSaida().writeUTF(textSenha.getText());
+            conexao.getSaida().flush();
             UsuarioBEAN usuario = (UsuarioBEAN) conexao.getEntradaObjeto().readObject();
             if (usuario == null) {
                 JOptionPane.showMessageDialog(null, "USUARIO NÃO CADASTRADO");

@@ -23,18 +23,16 @@ public class UsuarioDAO {
     }
 
     public int create(UsuarioBEAN usuario) {
-        String query = "INSERT INTO USUARIO (nome, email, senha, idade, descricao, prefSexo, prefEsporte, prefReligioso, prefMusica, prefGames, prefIdade) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-        JOptionPane.showMessageDialog(null, "Usuario cadastrado com sucesso!");
-        int id = (int) MySQLDAO.executeQuery(query, usuario.getNome(), usuario.getEmail(), usuario.getSenha(), usuario.getIdade(), usuario.getDescricao(), usuario.getPrefSexo()
+        String query = "INSERT INTO USUARIO (nome, login ,email, senha, idade, descricao, prefSexo, prefEsporte, prefReligioso, prefMusica, prefGames, prefIdade) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+        int id = (int) MySQLDAO.executeQuery(query, usuario.getNome(),usuario.getLogin() ,usuario.getEmail(), usuario.getSenha(), usuario.getIdade(), usuario.getDescricao(), usuario.getPrefSexo()
                                             , usuario.getPrefEsporte(), usuario.getPrefReligioso(), usuario.getPrefMusica(), usuario.getPrefGames(), usuario.getPrefIdade());
         usuario.setId(id);
         return id;
     }
 
     public int update(UsuarioBEAN usuario) {
-        String query = "UPDATE USUARIO SET nome=?, email=?, senha=?, idade=?, descricao=?, prefSexo=?, prefEsporte=?, prefReligioso=?, prefMusica=?, prefGames=?, prefIdade=? WHERE idusuario = ?";
-        JOptionPane.showMessageDialog(null, "Usuario atualizado com sucesso!");
-        return (int) MySQLDAO.executeQuery(query, usuario.getNome(), usuario.getEmail(), usuario.getSenha(), usuario.getIdade(), usuario.getDescricao(), usuario.getPrefSexo()
+        String query = "UPDATE USUARIO SET nome=?, login=? ,email=?, senha=?, idade=?, descricao=?, prefSexo=?, prefEsporte=?, prefReligioso=?, prefMusica=?, prefGames=?, prefIdade=? WHERE idusuario = ?";
+        return (int) MySQLDAO.executeQuery(query, usuario.getNome(), usuario.getLogin(),usuario.getEmail(), usuario.getSenha(), usuario.getIdade(), usuario.getDescricao(), usuario.getPrefSexo()
                                             , usuario.getPrefEsporte(), usuario.getPrefReligioso(), usuario.getPrefMusica(), usuario.getPrefGames(), usuario.getPrefIdade(), usuario.getId());
     }
 
@@ -62,7 +60,7 @@ public class UsuarioDAO {
         return lista;
     }
 
-    public UsuarioBEAN findUsuario(int idusuario) {
+    public UsuarioBEAN findUsuario(int idusuario) {;
         UsuarioBEAN result = null;
         ResultSet rs = null;
         rs = MySQLDAO.getResultSet("SELECT * FROM USUARIO WHERE idusuario=?", idusuario);
@@ -81,7 +79,8 @@ public class UsuarioDAO {
     public int findId(UsuarioBEAN usuario) {
         int result = 0;
         ResultSet rs = null;
-        rs = MySQLDAO.getResultSet("SELECT * FROM USUARIO WHERE nome=? and email=? and senha=? and idade=? and descricao=? and prefSexo=? and prefEsporte=? and prefReligioso=? and prefMusica=? and prefGames=? and prefIdade=?", usuario.getNome(), usuario.getEmail(), usuario.getSenha(), usuario.getIdade(), usuario.getDescricao(), usuario.getPrefSexo()
+        rs = MySQLDAO.getResultSet("SELECT * FROM USUARIO WHERE nome=? and login=? and email=? and senha=? and idade=? and descricao=? and prefSexo=? and prefEsporte=? and prefReligioso=? and prefMusica=? and prefGames=? and prefIdade=?", usuario.getNome(), usuario.getLogin(),usuario.getEmail(), 
+                usuario.getSenha(), usuario.getIdade(), usuario.getDescricao(), usuario.getPrefSexo()
                                             , usuario.getPrefEsporte(), usuario.getPrefReligioso(), usuario.getPrefMusica(), usuario.getPrefGames(), usuario.getPrefIdade());
         try {
             if (rs.next()) {

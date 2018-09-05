@@ -25,7 +25,12 @@ public class EspaçoCliente extends Thread{
     public EspaçoCliente(Socket cliente) {
         this.controle = new Controller();
         this.cliente=cliente;
-        try {
+       
+    }
+    
+    @Override
+    public void run(){
+         try {
             saida = new DataOutputStream(cliente.getOutputStream());
             entrada = new DataInputStream(cliente.getInputStream());
             saidaObjeto = new ObjectOutputStream(cliente.getOutputStream());
@@ -33,59 +38,63 @@ public class EspaçoCliente extends Thread{
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Erro: "+ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
-    }
-    
-    @Override
-    public void run(){
         acao();    
     }
     
     public synchronized void acao(){
         while(true){
             try {
-                System.out.println("AQUI, Parado ...");
                 comando = entrada.readUTF();
-                System.out.println("Não libera");
                 if (comando.contains("CRIAR")) {
                     UsuarioBEAN aux = (UsuarioBEAN) entradaObjeto.readObject();
                     if (notNull(aux)) {
+                        aux.setSenha(senhaToMd5(aux.getSenha()));
                         boolean retorno = gravarUsuario(aux);
                         saida.writeBoolean(retorno);
+                        saida.flush();
                     }else{ // Se o usuario é nulo
                         saida.writeBoolean(false);
+                        saida.flush();
                     }
                 }else 
                 if (comando.contains("ATUALIZAR")) {
-                    UsuarioBEAN aux1 = buscarUsuario(entrada.readInt());
-                    if (notNull(aux1)) {
-                        saidaObjeto.writeObject(aux1); // Envia informaçoes do usuario
+                    UsuarioBEAN usuarioAntigo = buscarUsuario(entrada.readInt());
+                    if (notNull(usuarioAntigo)) {
+                        saidaObjeto.writeObject(usuarioAntigo); // Envia informaçoes do usuario
                         UsuarioBEAN aux = (UsuarioBEAN) entradaObjeto.readObject();
                         if (notNull(aux)) {
                            boolean retorno = atualizarUsuario(aux);
                            saida.writeBoolean(retorno); 
+                           saida.flush();
                         }else{
                            saida.writeBoolean(false);
+                           saida.flush();
                         }
                     }else{ // Se o usuario é nulo
                         saida.writeBoolean(false);
+                        saida.flush();
                     }
                 }else 
                 if (comando.contains("BUSCAR USUARIO")) {
-                    System.out.println("ENTRA");
                     String login = entrada.readUTF();
-                    //String senha = senhaToMd5(entrada.readUTF());
-                    String senha = entrada.readUTF();
+                    String senha = senhaToMd5(entrada.readUTF());
+                    //String senha = entrada.readUTF();
                     UsuarioBEAN aux = buscarUsuario(login, senha);
                     if (notNull(aux)) {
                         saidaObjeto.writeObject(aux);
+                        saidaObjeto.flush();
                     }else{
                         saidaObjeto.writeObject(null);
+                        saidaObjeto.flush();
                     }
                 }else
                 if (comando.contains("ENCONTRAR")) {
                     UsuarioBEAN aux = (UsuarioBEAN) entradaObjeto.readObject();
                     if (notNull(aux)) {
                         saidaObjeto.writeObject(encontrarCompanhia(aux));
+                    }else{
+                        saidaObjeto.writeObject(null);
+                        saidaObjeto.flush();
                     }
                 }              
             } catch (Exception ex) {
@@ -150,7 +159,7 @@ public class EspaçoCliente extends Thread{
     private UsuarioBEAN encontrarCompanhia(UsuarioBEAN usuario){
         ArrayList<UsuarioBEAN> usuarios = controle.listaUsuarios();
         for(UsuarioBEAN aux : usuarios){
-            if (aux.getPrefEsporte() == usuario.getPrefEsporte() ||
+            if (aux.getLogin() != usuario.getLogin() && aux.getPrefEsporte() == usuario.getPrefEsporte() ||
                 aux.getPrefGames() == usuario.getPrefGames() ||
                 aux.getPrefIdade() == usuario.getPrefIdade() ||
                 aux.getPrefMusica() == usuario.getPrefMusica() ||

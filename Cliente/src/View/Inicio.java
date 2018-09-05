@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
 public class Inicio extends javax.swing.JFrame {
 
     private Conexao conexao = Login.getConexaoServidor();
-    private UsuarioBEAN usuario;
+    private static UsuarioBEAN usuario;
     
     public Inicio(UsuarioBEAN usuario) {
         try {
@@ -26,9 +26,12 @@ public class Inicio extends javax.swing.JFrame {
             desativarBotoes();
             this.usuario=usuario;
             conexao.getSaida().writeUTF("ENCONTRAR");
-            UsuarioBEAN usuarioCompativel = (UsuarioBEAN) conexao.getEntrada().readObject();
+            conexao.getSaida().flush();
+            conexao.getSaidaObjeto().writeObject(this.usuario);
+             conexao.getSaidaObjeto().flush();
+           UsuarioBEAN usuarioCompativel = (UsuarioBEAN) conexao.getEntradaObjeto().readObject();
             if(usuarioCompativel == null){
-                JOptionPane.showMessageDialog(null, "NENHUM USUARIO DISPONIVEL");
+                JOptionPane.showMessageDialog(null, "NENHUM USUARIO COMPATIVEL");
             }else{
                 txtNome.setText(usuarioCompativel.getNome());
                 txtIdade.setText(Integer.toString(usuarioCompativel.getIdade()));
@@ -36,9 +39,14 @@ public class Inicio extends javax.swing.JFrame {
             }
         } catch (IOException ex) {
             Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
+        } 
+        catch (ClassNotFoundException ex) {
             Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void setUsuario(UsuarioBEAN  usuario){
+        this.usuario=usuario;
     }
 
     
@@ -191,7 +199,7 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu1ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        Perfil perfil = new Perfil(usuario);
+        Perfil perfil = new Perfil(this.usuario,this);
         perfil.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 

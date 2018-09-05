@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -19,10 +20,24 @@ public class Perfil extends javax.swing.JFrame {
 
     private Conexao conexao = Login.getConexaoServidor();
     private UsuarioBEAN usuario;
+    private Inicio instance;
 
-    public Perfil(UsuarioBEAN usuario) {
-        initComponents();
-        this.usuario = usuario;
+    public Perfil(UsuarioBEAN usuario,Inicio instance) {
+        try {
+            initComponents();
+            this.instance = instance;
+            this.usuario = usuario;
+            conexao.getSaida().writeUTF("ATUALIZAR");
+            conexao.getSaida().flush();
+            conexao.getSaida().writeInt(usuario.getId());
+            conexao.getSaida().flush();
+            usuario = (UsuarioBEAN) conexao.getEntradaObjeto().readObject();
+            System.out.println(usuario.getNome());
+        } catch (IOException ex) {
+            Logger.getLogger(Perfil.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Perfil.class.getName()).log(Level.SEVERE, null, ex);
+        }
         preencherCampos();
     }
 
@@ -329,6 +344,7 @@ public class Perfil extends javax.swing.JFrame {
 
     private void botaoAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAtualizarActionPerformed
         try {
+            UsuarioBEAN retorno = new UsuarioBEAN();
             byte prefSexo = 1;
             byte prefEsporte = 1;
             byte prefReligioso = 1;
@@ -353,18 +369,28 @@ public class Perfil extends javax.swing.JFrame {
             if (comboReligiao.getSelectedItem() == "NÃO") {
                 prefReligioso = 0;
             }
-            usuario.setNome(textNome.getText());
-            usuario.setId(Integer.parseInt(textIdade.getText()));
-            usuario.setDescricao(textDescricao.getText());
-            usuario.setPrefEsporte(prefEsporte);
-            usuario.setPrefSexo(prefSexo);
-            usuario.setPrefMusica(prefMusica);
-            usuario.setPrefReligioso(prefReligioso);
-            usuario.setPrefGames(prefGames);
-            usuario.setPrefIdade(prefIdade);
-            conexao.getSaida().writeUTF("ATUALIZAR");
-            conexao.getSaida().writeObject(usuario);
-            conexao.getSaida().flush();
+            retorno.setNome(textNome.getText());
+            retorno.setIdade(Integer.parseInt(textIdade.getText()));
+            retorno.setDescricao(textDescricao.getText());
+            retorno.setPrefEsporte(prefEsporte);
+            retorno.setPrefSexo(prefSexo);
+            retorno.setPrefMusica(prefMusica);
+            retorno.setPrefReligioso(prefReligioso);
+            retorno.setPrefGames(prefGames);
+            retorno.setPrefIdade(prefIdade);
+            retorno.setEmail(usuario.getEmail());
+            retorno.setLogin(usuario.getLogin());
+            retorno.setId(usuario.getId());
+            retorno.setSenha(usuario.getSenha());
+            conexao.getSaidaObjeto().writeObject(retorno);
+            conexao.getSaidaObjeto().flush();
+            if(conexao.getEntrada().readBoolean() == false){
+                JOptionPane.showMessageDialog(null, "ERROR!");
+            }else{
+                JOptionPane.showMessageDialog(null, "DADOS SALVOS");
+                instance.setUsuario(retorno);
+                this.setVisible(false);
+            }
         } catch (IOException ex) {
             Logger.getLogger(CadastroUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
