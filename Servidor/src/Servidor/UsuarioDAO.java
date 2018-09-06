@@ -77,7 +77,7 @@ public class UsuarioDAO {
     }
     
     public void insereImagem(byte[] foto, int idusuario) {
-    
+        MySQLDAO.insereImagem(foto, idusuario);
     }
  
     public int findId(UsuarioBEAN usuario) {
