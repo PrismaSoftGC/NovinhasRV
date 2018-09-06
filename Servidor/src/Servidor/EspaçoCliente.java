@@ -24,8 +24,7 @@ public class EspaçoCliente extends Thread{
     
     public EspaçoCliente(Socket cliente) {
         this.controle = new Controller();
-        this.cliente=cliente;
-       
+        this.cliente=cliente;  
     }
     
     @Override
