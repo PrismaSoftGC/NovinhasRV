@@ -20,6 +20,7 @@ public class EscolherCaminhoSalvarFoto extends javax.swing.JDialog {
         initComponents();
         teste.setFileSelectionMode(teste.DIRECTORIES_ONLY);
         teste.setAcceptAllFileFilterUsed(false);
+        setLocationRelativeTo(null);
     }
 
     /**
