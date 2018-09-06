@@ -12,18 +12,17 @@ import java.math.*;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
-public class EspacoCliente extends Thread{
+public class EspaçoCliente extends Thread{
     
     private Socket cliente=null;
     private static DataInputStream entrada=null;
     private static DataOutputStream saida=null;
-    private static ObjectOutputStream saidaObjeto=null;
+     private static ObjectOutputStream saidaObjeto=null;
     private static ObjectInputStream entradaObjeto=null;
     private String comando;
     private Controller controle;
-    private int idusuario;
     
-    public EspacoCliente(Socket cliente) {
+    public EspaçoCliente(Socket cliente) {
         this.controle = new Controller();
         this.cliente=cliente;
        
@@ -48,12 +47,10 @@ public class EspacoCliente extends Thread{
                 comando = entrada.readUTF();
                 if (comando.contains("CRIAR")) {
                     UsuarioBEAN aux = (UsuarioBEAN) entradaObjeto.readObject();
-                    //byte[] foto = (byte[]) entradaObjeto.readObject();
                     if (notNull(aux)) {
                         aux.setSenha(senhaToMd5(aux.getSenha()));
                         boolean retorno = gravarUsuario(aux);
                         saida.writeBoolean(retorno);
-                        //insereImagem(foto);
                         saida.flush();
                     }else{ // Se o usuario é nulo
                         saida.writeBoolean(false);
@@ -125,16 +122,11 @@ public class EspacoCliente extends Thread{
     
     // #########################################################################
     private boolean gravarUsuario(UsuarioBEAN usuario){
-        idusuario = controle.addUsuario(usuario);
+        controle.addUsuario(usuario);
         if (controle.findIdUsuario(usuario) >= 0) {
             return true;
         }
         return false;
-    }
-    
-    // #########################################################################
-    private void insereImagem(byte[] foto) {
-        controle.insereImagem(foto, idusuario);
     }
     
     // #########################################################################

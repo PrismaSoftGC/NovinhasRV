@@ -22,7 +22,6 @@ public class TirarFotoWebcam extends javax.swing.JFrame {
     private Webcam webcam;
     private int validador = 0;
     private CadastroUsuario c;
-    public static byte[] foto;
     
     public TirarFotoWebcam(CadastroUsuario obj) {
         initComponents();
@@ -30,7 +29,6 @@ public class TirarFotoWebcam extends javax.swing.JFrame {
         inicializar();
         setLocationRelativeTo(null);
         validador = 0;
-        setAlwaysOnTop(true);
     }
 
     public void inicializar() {
@@ -38,6 +36,10 @@ public class TirarFotoWebcam extends javax.swing.JFrame {
             dimensao = WebcamResolution.VGA.getSize();
             webcam = Webcam.getDefault();
             webcam.setViewSize(dimensao);   
+            
+            for (Dimension d : webcam.getViewSizes()) {
+                System.out.println("Largura: " + d.getWidth() + " Largura:" + d.getHeight());
+            }
             
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -124,29 +126,30 @@ public class TirarFotoWebcam extends javax.swing.JFrame {
         jLayeredPane1Layout.setHorizontalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(labelFoto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
                         .addComponent(botaoCamera)
-                        .addGap(31, 31, 31)
-                        .addComponent(botaoTirarFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-                        .addComponent(botaoCancelar)))
-                .addContainerGap(13, Short.MAX_VALUE))
+                        .addGap(34, 34, 34)
+                        .addComponent(botaoTirarFoto)
+                        .addGap(33, 33, 33)
+                        .addComponent(botaoCancelar))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
+                        .addComponent(labelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(36, 36, 36)))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         jLayeredPane1Layout.setVerticalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addContainerGap()
                 .addComponent(labelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(botaoCancelar)
-                    .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(botaoCamera)
-                        .addComponent(botaoTirarFoto)))
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(botaoCamera)
+                    .addComponent(botaoTirarFoto)
+                    .addComponent(botaoCancelar))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -201,12 +204,6 @@ public class TirarFotoWebcam extends javax.swing.JFrame {
              
              ByteArrayInputStream is = new ByteArrayInputStream(bytes);
              BufferedImage imagem = ImageIO.read(is);
-             
-             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-             ImageIO.write( imagem, "jpg", baos );
-             baos.flush();
-             this.foto = baos.toByteArray();
-             baos.close();
 
              int novaLargura = 500, novaAltura = 500;
              BufferedImage new_img = new BufferedImage(novaLargura, novaAltura, BufferedImage.TYPE_INT_RGB);

@@ -21,7 +21,6 @@ public class EscolherFoto extends javax.swing.JDialog {
         initComponents();
         teste.setFileFilter(new FileNameExtensionFilter("Image files", "bmp", "png", "jpg"));
         teste.setAcceptAllFileFilterUsed(false);
-        setLocationRelativeTo(null);
     }
 
     /**

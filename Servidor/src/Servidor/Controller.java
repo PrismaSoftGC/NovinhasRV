@@ -32,8 +32,4 @@ public class Controller {
     public ArrayList<UsuarioBEAN> listaUsuario(String nome) {
         return UsuarioDAO.getInstance().findAllUsuario(nome);
     }
-    
-    public void insereImagem(byte[] foto, int idusuario) {
-        UsuarioDAO.getInstance().insereImagem(foto, idusuario);
-    }
 }

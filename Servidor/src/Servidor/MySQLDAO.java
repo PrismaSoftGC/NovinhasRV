@@ -40,10 +40,6 @@ public class MySQLDAO {
         }
         return rs;
     }
-    
-    public static void insereImagem(byte[] imagem, int idusuario) {
-        
-    }
 
     public static long executeQuery(String query, Object... parametros) {
         long update = 0;
