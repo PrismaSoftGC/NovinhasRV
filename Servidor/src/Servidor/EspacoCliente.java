@@ -125,7 +125,7 @@ public class EspacoCliente extends Thread{
     
     // #########################################################################
     private boolean gravarUsuario(UsuarioBEAN usuario){
-        controle.addUsuario(usuario);
+        idusuario = controle.addUsuario(usuario);
         if (controle.findIdUsuario(usuario) >= 0) {
             return true;
         }
@@ -134,7 +134,7 @@ public class EspacoCliente extends Thread{
     
     // #########################################################################
     private void insereImagem(byte[] foto) {
-        controle.insereImagem(idusuario, foto);
+        controle.insereImagem(foto, idusuario);
     }
     
     // #########################################################################

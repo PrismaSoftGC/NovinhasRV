@@ -14,7 +14,7 @@ public class Servidor {
                   ServerSocket server = new ServerSocket(3312);
                   while (true) {
                       System.out.println("esperando");
-                    new EspaçoCliente(server.accept()).start();
+                    new EspacoCliente(server.accept()).start();
                       System.out.println("recebeu");
                   }
                 } catch (Exception e) {
