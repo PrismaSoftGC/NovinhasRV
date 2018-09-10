@@ -12,19 +12,21 @@ import java.math.*;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
-public class EspaçoCliente extends Thread{
+public class EspacoCliente extends Thread{
     
     private Socket cliente=null;
     private static DataInputStream entrada=null;
     private static DataOutputStream saida=null;
-     private static ObjectOutputStream saidaObjeto=null;
+    private static ObjectOutputStream saidaObjeto=null;
     private static ObjectInputStream entradaObjeto=null;
     private String comando;
     private Controller controle;
+    private int idusuario;
     
-    public EspaçoCliente(Socket cliente) {
+    public EspacoCliente(Socket cliente) {
         this.controle = new Controller();
-        this.cliente=cliente;  
+        this.cliente=cliente;
+       
     }
     
     @Override
@@ -46,10 +48,12 @@ public class EspaçoCliente extends Thread{
                 comando = entrada.readUTF();
                 if (comando.contains("CRIAR")) {
                     UsuarioBEAN aux = (UsuarioBEAN) entradaObjeto.readObject();
+                    //byte[] foto = (byte[]) entradaObjeto.readObject();
                     if (notNull(aux)) {
                         aux.setSenha(senhaToMd5(aux.getSenha()));
                         boolean retorno = gravarUsuario(aux);
                         saida.writeBoolean(retorno);
+                        //insereImagem(foto);
                         saida.flush();
                     }else{ // Se o usuario é nulo
                         saida.writeBoolean(false);
@@ -121,11 +125,16 @@ public class EspaçoCliente extends Thread{
     
     // #########################################################################
     private boolean gravarUsuario(UsuarioBEAN usuario){
-        controle.addUsuario(usuario);
+        idusuario = controle.addUsuario(usuario);
         if (controle.findIdUsuario(usuario) >= 0) {
             return true;
         }
         return false;
+    }
+    
+    // #########################################################################
+    private void insereImagem(byte[] foto) {
+        controle.insereImagem(foto, idusuario);
     }
     
     // #########################################################################
