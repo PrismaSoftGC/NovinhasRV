@@ -9,6 +9,7 @@ import Model.UsuarioBEAN;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -16,32 +17,35 @@ import java.util.logging.Logger;
  */
 public class Configuracoes extends javax.swing.JFrame {
 
-    
+    private Conexao conexao = Login.getConexaoServidor();
     private UsuarioBEAN usuario;
-   
-    
-    public Configuracoes() {
-        initComponents();
-        setVisible(true);
-        setLocationRelativeTo(null);
-    }
-    
-    public static void main(String[] args) {
-        new Configuracoes();
-    }
-    
-    public Configuracoes(UsuarioBEAN usuario) {
-        initComponents();
-        this.usuario = usuario;
-        setLocationRelativeTo(null);
+    private Inicio instance;
+
+    public Configuracoes(UsuarioBEAN usuario, Inicio instance) {
+        try {
+            initComponents();
+            this.instance = instance;
+            this.usuario = usuario;
+            setLocationRelativeTo(null);
+            conexao.getSaida().writeUTF("ATUALIZAR");
+            conexao.getSaida().flush();
+            conexao.getSaida().writeInt(usuario.getId());
+            conexao.getSaida().flush();
+            usuario = (UsuarioBEAN) conexao.getEntradaObjeto().readObject();
+        } catch (IOException ex) {
+            Logger.getLogger(Perfil.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Perfil.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        preencherCampos();
     }
 
-    private void preencherCampos(){
+    private void preencherCampos() {
         textLogin.setText(usuario.getLogin());
         textEmail.setText(usuario.getEmail());
         textSenha.setText(usuario.getSenha());
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -61,7 +65,7 @@ public class Configuracoes extends javax.swing.JFrame {
         textEmail = new javax.swing.JTextField();
         botaoAtualizar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         labelAutor.setFont(new java.awt.Font("Harrington", 0, 36)); // NOI18N
         labelAutor.setText("Configurações");
@@ -121,6 +125,11 @@ public class Configuracoes extends javax.swing.JFrame {
         botaoAtualizar.setBackground(new java.awt.Color(51, 51, 51));
         botaoAtualizar.setForeground(new java.awt.Color(255, 255, 255));
         botaoAtualizar.setText("Atualizar dados");
+        botaoAtualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoAtualizarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -160,13 +169,29 @@ public class Configuracoes extends javax.swing.JFrame {
 
     private void botaoAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAtualizarActionPerformed
         try {
-            Conexao conexao = Login.getConexaoServidor();
-            usuario.setLogin(textLogin.getText());
-            usuario.setEmail(textEmail.getText());
-            usuario.setSenha(textSenha.getText());
-            conexao.getSaida().writeUTF("ATUALIZAR");
-            conexao.getSaidaObjeto().writeObject(usuario);
-            conexao.getSaida().flush();
+            UsuarioBEAN retorno = new UsuarioBEAN();
+            retorno.setNome(usuario.getNome());
+            retorno.setIdade(usuario.getIdade());
+            retorno.setDescricao(usuario.getDescricao());
+            retorno.setPrefEsporte(usuario.getPrefEsporte());
+            retorno.setPrefSexo(usuario.getPrefSexo());
+            retorno.setPrefMusica(usuario.getPrefMusica());
+            retorno.setPrefReligioso(usuario.getPrefReligioso());
+            retorno.setPrefGames(usuario.getPrefGames());
+            retorno.setPrefIdade(usuario.getPrefIdade());
+            retorno.setLogin(textLogin.getText());
+            retorno.setEmail(textEmail.getText());
+            retorno.setSenha(textSenha.getText());
+            retorno.setId(usuario.getId());
+            conexao.getSaidaObjeto().writeObject(retorno);
+            conexao.getSaidaObjeto().flush();
+            if(conexao.getEntrada().readBoolean() == false){
+                JOptionPane.showMessageDialog(null, "ERROR!");
+            }else{
+                JOptionPane.showMessageDialog(null, "DADOS ATUALIZADOS");
+                instance.setUsuario(retorno);
+                this.setVisible(false);
+            }
         } catch (IOException ex) {
             Logger.getLogger(CadastroUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -134,8 +134,13 @@ public class Inicio extends javax.swing.JFrame {
         txtDescrição.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtDescrição.setText("Descrição:");
 
+        jTextField1.setEnabled(false);
+
+        jTextField2.setEnabled(false);
+
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
+        jTextArea1.setEnabled(false);
         jScrollPane1.setViewportView(jTextArea1);
 
         jMenu1.setText("Usuário");
@@ -245,7 +250,7 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        Configuracoes configuracao = new Configuracoes(usuario);
+        Configuracoes configuracao = new Configuracoes(usuario,this);
         configuracao.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 

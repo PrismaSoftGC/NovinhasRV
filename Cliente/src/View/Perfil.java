@@ -33,7 +33,6 @@ public class Perfil extends javax.swing.JFrame {
             conexao.getSaida().writeInt(usuario.getId());
             conexao.getSaida().flush();
             usuario = (UsuarioBEAN) conexao.getEntradaObjeto().readObject();
-            System.out.println(usuario.getNome());
         } catch (IOException ex) {
             Logger.getLogger(Perfil.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -375,7 +374,7 @@ public class Perfil extends javax.swing.JFrame {
             if(conexao.getEntrada().readBoolean() == false){
                 JOptionPane.showMessageDialog(null, "ERROR!");
             }else{
-                JOptionPane.showMessageDialog(null, "DADOS SALVOS");
+                JOptionPane.showMessageDialog(null, "DADOS ATUALIZADOS");
                 instance.setUsuario(retorno);
                 this.setVisible(false);
             }
