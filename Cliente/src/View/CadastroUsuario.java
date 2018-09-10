@@ -20,10 +20,14 @@ import webcam.TirarFotoWebcam;
  */
 public class CadastroUsuario extends javax.swing.JDialog {
 
-    public CadastroUsuario(java.awt.Frame parent, boolean modal) {
+    private Login instance;
+    private EscolherFoto escolher;
+    
+    public CadastroUsuario(java.awt.Frame parent, boolean modal,Login instance) {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(null);
+        this.instance=instance;
         //Login.getConexaoServidor().getEntrada().readUTF("fsdfsdfsdfsd");
         //Login.getConexaoServidor().getSaida().writeUTF("fsdfsdfsdfsd");
     }
@@ -78,6 +82,7 @@ public class CadastroUsuario extends javax.swing.JDialog {
         jToggleButton1 = new javax.swing.JToggleButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         textDescricao = new javax.swing.JTextArea();
+        jToggleButton2 = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -276,6 +281,15 @@ public class CadastroUsuario extends javax.swing.JDialog {
         textDescricao.setRows(5);
         jScrollPane1.setViewportView(textDescricao);
 
+        jToggleButton2.setBackground(new java.awt.Color(51, 51, 51));
+        jToggleButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jToggleButton2.setText("Escolher Foto");
+        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -294,21 +308,28 @@ public class CadastroUsuario extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(textIdade, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jToggleButton1))
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jToggleButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jToggleButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(jScrollPane1))
                 .addGap(46, 46, 46))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(textNome, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelLogin5)
-                    .addComponent(labelLogin6)
-                    .addComponent(textIdade, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jToggleButton1))
-                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(textNome, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelLogin5)
+                            .addComponent(labelLogin6)
+                            .addComponent(textIdade, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jToggleButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jToggleButton2)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelNome2)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -382,32 +403,34 @@ public class CadastroUsuario extends javax.swing.JDialog {
                 prefReligioso = 0;
             }
             UsuarioBEAN usuario = new UsuarioBEAN(0, textLogin.getText(),textNome.getText(), textEmail.getText(), textSenha.getText(), Integer.parseInt(textIdade.getText()),
-                     textDescricao.getText(), prefSexo, prefEsporte, prefReligioso, prefMusica, prefGames, prefIdade);
+                     textDescricao.getText(), prefSexo, prefEsporte, prefReligioso, prefMusica, prefGames, prefIdade,"");
             
             byte[] foto = TirarFotoWebcam.foto;
-            
+            String caminho = escolher.caminho();
             Conexao conexao = Login.getConexaoServidor();
             conexao.getSaida().flush();
             conexao.getSaida().writeUTF("CRIAR");
             conexao.getSaida().flush();
             conexao.getSaidaObjeto().writeObject(usuario);
             conexao.getSaida().flush();
-            //conexao.getSaidaObjeto().writeObject(foto);
-            //conexao.getSaida().flush();
-             //conexao.getSaida().writeUTF("SAIR");
+            FileInputStream file = new FileInputStream(caminho);
+            byte[] buf = new byte[4096];
+            while(true){
+                int len = file.read(buf);
+                if(len == -1){ 
+                    break;
+                }
+                conexao.getSaida().write(buf,0,len);
+                conexao.getSaida().flush();
+            }
+            conexao.getSaida().flush();
             if(conexao.getEntrada().readBoolean() == false){
                 JOptionPane.showMessageDialog(null, "ERROR!");
             }else{
                 JOptionPane.showMessageDialog(null, "CADASTRADO COM SUCESSO");
                 this.setVisible(false);
             }
-            /*FileInputStream file = new FileInputStream("C:\\Users\\adeja\\Desktop\\FotoUsuario.jpg");
-            byte[] buf = new byte[4096];
-            while(true){
-                int len = file.read(buf);
-                if(len == -1) break;
-                conexao.getSaida().write(buf,0,len);
-            }*/
+            
         } catch (IOException ex) {
             Logger.getLogger(CadastroUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -421,6 +444,11 @@ public class CadastroUsuario extends javax.swing.JDialog {
     private void textLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textLoginActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_textLoginActionPerformed
+
+    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
+       escolher = new EscolherFoto(instance, true);
+        escolher.setVisible(true);
+    }//GEN-LAST:event_jToggleButton2ActionPerformed
 
 
 
@@ -442,6 +470,7 @@ public class CadastroUsuario extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToggleButton jToggleButton1;
+    private javax.swing.JToggleButton jToggleButton2;
     private javax.swing.JLabel labelAutor;
     private javax.swing.JLabel labelLogin1;
     private javax.swing.JLabel labelLogin2;

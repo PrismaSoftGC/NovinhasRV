@@ -23,16 +23,16 @@ public class UsuarioDAO {
     }
 
     public int create(UsuarioBEAN usuario) {
-        String query = "INSERT INTO USUARIO (nome, login ,email, senha, idade, descricao, prefSexo, prefEsporte, prefReligioso, prefMusica, prefGames, prefIdade) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+        String query = "INSERT INTO USUARIO (nome, login ,email, senha, idade, descricao, prefSexo, prefEsporte, prefReligioso, prefMusica, prefGames, prefIdade,caminhoImagem) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
         int id = (int) MySQLDAO.executeQuery(query, usuario.getNome(),usuario.getLogin() ,usuario.getEmail(), usuario.getSenha(), usuario.getIdade(), usuario.getDescricao(), usuario.getPrefSexo()
-                                            , usuario.getPrefEsporte(), usuario.getPrefReligioso(), usuario.getPrefMusica(), usuario.getPrefGames(), usuario.getPrefIdade());
+                                            , usuario.getPrefEsporte(), usuario.getPrefReligioso(), usuario.getPrefMusica(), usuario.getPrefGames(), usuario.getPrefIdade(),usuario.getCaminhoImagem());
         usuario.setId(id);
         return id;
     }
 
     public int update(UsuarioBEAN usuario) {
-        String query = "UPDATE USUARIO SET nome=?, login=? ,email=?, senha=?, idade=?, descricao=?, prefSexo=?, prefEsporte=?, prefReligioso=?, prefMusica=?, prefGames=?, prefIdade=? WHERE idusuario = ?";
-        return (int) MySQLDAO.executeQuery(query, usuario.getNome(), usuario.getLogin(),usuario.getEmail(), usuario.getSenha(), usuario.getIdade(), usuario.getDescricao(), usuario.getPrefSexo()
+        String query = "UPDATE USUARIO SET caminhoImagem=?, nome=?, login=? ,email=?, senha=?, idade=?, descricao=?, prefSexo=?, prefEsporte=?, prefReligioso=?, prefMusica=?, prefGames=?, prefIdade=? WHERE idusuario = ?";
+        return (int) MySQLDAO.executeQuery(query, usuario.getCaminhoImagem(),usuario.getNome(), usuario.getLogin(),usuario.getEmail(), usuario.getSenha(), usuario.getIdade(), usuario.getDescricao(), usuario.getPrefSexo()
                                             , usuario.getPrefEsporte(), usuario.getPrefReligioso(), usuario.getPrefMusica(), usuario.getPrefGames(), usuario.getPrefIdade(), usuario.getId());
     }
 
@@ -51,7 +51,7 @@ public class UsuarioDAO {
         try {
             while (rs.next()) {
                 lista.add(new UsuarioBEAN(rs.getInt("idusuario"), rs.getString("login"),rs.getString("nome"), rs.getString("email"), rs.getString("senha"), rs.getInt("idade"), rs.getString("descricao"),
-                          rs.getByte("prefSexo"), rs.getByte("prefEsporte"), rs.getByte("prefReligioso"), rs.getByte("prefMusica"), rs.getByte("prefGames"), rs.getByte("prefIdade")));
+                          rs.getByte("prefSexo"), rs.getByte("prefEsporte"), rs.getByte("prefReligioso"), rs.getByte("prefMusica"), rs.getByte("prefGames"), rs.getByte("prefIdade"),rs.getString("caminhoImagem")));
             }
             rs.close();
         } catch (SQLException e) {
@@ -67,7 +67,7 @@ public class UsuarioDAO {
         try {
             if (rs.next()) {
                 result = new UsuarioBEAN(rs.getInt("idusuario"),rs.getString("login"),rs.getString("nome"), rs.getString("email"), rs.getString("senha"), rs.getInt("idade"), rs.getString("descricao"),
-                          rs.getByte("prefSexo"), rs.getByte("prefEsporte"), rs.getByte("prefReligioso"), rs.getByte("prefMusica"), rs.getByte("prefGames"), rs.getByte("prefIdade"));
+                          rs.getByte("prefSexo"), rs.getByte("prefEsporte"), rs.getByte("prefReligioso"), rs.getByte("prefMusica"), rs.getByte("prefGames"), rs.getByte("prefIdade"),rs.getString("caminhoImagem"));
             }
             rs.close();
         } catch (SQLException e) {

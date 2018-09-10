@@ -6,9 +6,12 @@
 package View;
 
 import Model.UsuarioBEAN;
+import java.awt.Image;
+import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -19,64 +22,72 @@ public class Inicio extends javax.swing.JFrame {
 
     private Conexao conexao = Login.getConexaoServidor();
     private static UsuarioBEAN usuario;
-    
+    private static UsuarioBEAN usuarioCompativel;
+
     public Inicio(UsuarioBEAN usuario) {
         try {
             initComponents();
             setLocationRelativeTo(null);
             desativarBotoes();
-            this.usuario=usuario;
+            this.usuario = usuario;
             conexao.getSaida().writeUTF("ENCONTRAR");
             conexao.getSaida().flush();
             conexao.getSaidaObjeto().writeObject(this.usuario);
-             conexao.getSaidaObjeto().flush();
-           UsuarioBEAN usuarioCompativel = (UsuarioBEAN) conexao.getEntradaObjeto().readObject();
-            if(usuarioCompativel == null){
+            conexao.getSaidaObjeto().flush();
+            usuarioCompativel = (UsuarioBEAN) conexao.getEntradaObjeto().readObject();
+            
+            
+            byte imagem[] = (byte[]) conexao.getEntradaObjeto().readObject();
+
+            ImageIcon im = new ImageIcon(imagem);
+            exibeimagem.setIcon(new ImageIcon(im.getImage().getScaledInstance(200, 200, Image.SCALE_DEFAULT)));
+
+            
+            if (usuarioCompativel == null) {
                 JOptionPane.showMessageDialog(null, "NENHUM USUARIO COMPATIVEL");
-            }else{
-                txtNome.setText(usuarioCompativel.getNome());
-                txtIdade.setText(Integer.toString(usuarioCompativel.getIdade()));
-                txtDescrição.setText(usuarioCompativel.getDescricao());
+            } else {
+                textNome.setText(usuarioCompativel.getNome());
+                textIdade.setText(Integer.toString(usuarioCompativel.getIdade()));
+                textDescricao.setText(usuarioCompativel.getDescricao());
+                reativarBotoes();
             }
         } catch (IOException ex) {
             Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        catch (ClassNotFoundException ex) {
+        } catch (ClassNotFoundException ex) {
             Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void setUsuario(UsuarioBEAN  usuario){
-        this.usuario=usuario;
+
+    public void setUsuario(UsuarioBEAN usuario) {
+        this.usuario = usuario;
     }
 
-    
-    private void desativarBotoes(){
+    private void desativarBotoes() {
         botaoConversar.setEnabled(false);
         botaoRecusar.setEnabled(false);
     }
-    
-    private void reativarBotoes(){
+
+    private void reativarBotoes() {
         botaoConversar.setEnabled(true);
         botaoRecusar.setEnabled(true);
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         botaoConversar = new javax.swing.JButton();
         botaoRecusar = new javax.swing.JButton();
         txtNome = new javax.swing.JLabel();
         txtIdade = new javax.swing.JLabel();
         txtDescrição = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        textNome = new javax.swing.JTextField();
+        textIdade = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        textDescricao = new javax.swing.JTextArea();
         jSeparator1 = new javax.swing.JSeparator();
+        exibeimagem = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -86,23 +97,19 @@ public class Inicio extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel1.setText("FOTO");
+        jPanel1.setMaximumSize(new java.awt.Dimension(200, 200));
+        jPanel1.setMinimumSize(new java.awt.Dimension(200, 200));
+        jPanel1.setPreferredSize(new java.awt.Dimension(200, 200));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(56, 56, 56)
-                .addComponent(jLabel1)
-                .addContainerGap(63, Short.MAX_VALUE))
+            .addGap(0, 200, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(41, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(38, 38, 38))
+            .addGap(0, 200, Short.MAX_VALUE)
         );
 
         botaoConversar.setBackground(new java.awt.Color(51, 255, 51));
@@ -134,14 +141,19 @@ public class Inicio extends javax.swing.JFrame {
         txtDescrição.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtDescrição.setText("Descrição:");
 
-        jTextField1.setEnabled(false);
+        textNome.setEnabled(false);
 
-        jTextField2.setEnabled(false);
+        textIdade.setEnabled(false);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jTextArea1.setEnabled(false);
-        jScrollPane1.setViewportView(jTextArea1);
+        textDescricao.setColumns(20);
+        textDescricao.setRows(5);
+        textDescricao.setEnabled(false);
+        jScrollPane1.setViewportView(textDescricao);
+
+        exibeimagem.setText("FOTO");
+        exibeimagem.setMaximumSize(new java.awt.Dimension(200, 200));
+        exibeimagem.setMinimumSize(new java.awt.Dimension(200, 200));
+        exibeimagem.setPreferredSize(new java.awt.Dimension(200, 200));
 
         jMenu1.setText("Usuário");
         jMenu1.addActionListener(new java.awt.event.ActionListener() {
@@ -187,6 +199,8 @@ public class Inicio extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(112, 112, 112)
+                        .addComponent(exibeimagem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -196,10 +210,10 @@ public class Inicio extends javax.swing.JFrame {
                                 .addComponent(txtIdade)))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField1)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(textNome)
+                            .addComponent(textIdade, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(105, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jSeparator1)
@@ -215,15 +229,17 @@ public class Inicio extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(exibeimagem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtNome)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(textNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtIdade)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(textIdade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtDescrição)
@@ -234,7 +250,7 @@ public class Inicio extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(botaoConversar, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(botaoRecusar, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(42, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -245,18 +261,21 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu1ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        Perfil perfil = new Perfil(this.usuario,this);
+        Perfil perfil = new Perfil(this.usuario, this);
         perfil.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        Configuracoes configuracao = new Configuracoes(usuario,this);
+        Configuracoes configuracao = new Configuracoes(usuario, this);
         configuracao.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void botaoConversarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoConversarActionPerformed
         Chat chat;
         try {
+            conexao.getSaida().writeUTF("CONVERSAR");
+            conexao.getSaidaObjeto().writeObject(usuario);
+            conexao.getSaidaObjeto().writeObject(usuarioCompativel);
             chat = new Chat();
             chat.setVisible(true);
         } catch (IOException ex) {
@@ -265,12 +284,12 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoConversarActionPerformed
 
     private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
-        Sobre sobre = new Sobre(this,true);
+        Sobre sobre = new Sobre(this, true);
         sobre.setVisible(true);
     }//GEN-LAST:event_jMenu2MouseClicked
 
     private void botaoRecusarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoRecusarActionPerformed
-        
+
     }//GEN-LAST:event_botaoRecusarActionPerformed
 
     /**
@@ -311,7 +330,7 @@ public class Inicio extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoConversar;
     private javax.swing.JButton botaoRecusar;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel exibeimagem;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -320,9 +339,9 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextArea textDescricao;
+    private javax.swing.JTextField textIdade;
+    private javax.swing.JTextField textNome;
     private javax.swing.JLabel txtDescrição;
     private javax.swing.JLabel txtIdade;
     private javax.swing.JLabel txtNome;

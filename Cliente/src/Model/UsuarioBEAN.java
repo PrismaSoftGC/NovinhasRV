@@ -19,11 +19,12 @@ public class UsuarioBEAN implements Serializable {
     private byte prefMusica;
     private byte prefGames;
     private byte prefIdade;
+    private String caminhoImagem;
 
     public UsuarioBEAN(){};
     
     public UsuarioBEAN(int id, String login,String nome, String email, String senha, int idade, String descricao, 
-            byte prefSexo, byte prefEsporte, byte prefReligioso, byte prefMusica, byte prefGames, byte prefIdade) {
+            byte prefSexo, byte prefEsporte, byte prefReligioso, byte prefMusica, byte prefGames, byte prefIdade, String caminhoImagem) {
         this.id = id;
         this.login = login;
         this.nome = nome;
@@ -37,10 +38,11 @@ public class UsuarioBEAN implements Serializable {
         this.prefMusica = prefMusica;
         this.prefGames = prefGames;
         this.prefIdade = prefIdade;
+        this.caminhoImagem = caminhoImagem;
     }
 
     public UsuarioBEAN(String nome, String login,String email, String senha, int idade, String descricao, 
-            byte prefSexo, byte prefEsporte, byte prefReligioso, byte prefMusica, byte prefGames, byte prefIdade) {
+            byte prefSexo, byte prefEsporte, byte prefReligioso, byte prefMusica, byte prefGames, byte prefIdade,String caminhoImagem) {
         this.nome = nome;
         this.login = login;
         this.email = email;
@@ -53,6 +55,15 @@ public class UsuarioBEAN implements Serializable {
         this.prefMusica = prefMusica;
         this.prefGames = prefGames;
         this.prefIdade = prefIdade;
+        this.caminhoImagem = caminhoImagem;
+    }
+
+    public String getCaminhoImagem() {
+        return caminhoImagem;
+    }
+
+    public void setCaminhoImagem(String caminhoImagem) {
+        this.caminhoImagem = caminhoImagem;
     }
 
     public String getLogin() {

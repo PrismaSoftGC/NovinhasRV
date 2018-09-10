@@ -13,9 +13,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class EscolherFoto extends javax.swing.JDialog {
 
-    /**
-     * Creates new form EscolherFoto2
-     */
+    
+    private static String caminho;
+    
     public EscolherFoto(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -58,14 +58,18 @@ public class EscolherFoto extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void testeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testeActionPerformed
-
         if(evt.getActionCommand() == "ApproveSelection"){
-            System.out.println(teste.getSelectedFile().getPath());
+            caminho = teste.getSelectedFile().getPath();
+            this.dispose();
         }else{
-            System.out.println("ADIOS");
+            this.setVisible(false);
         }
     }//GEN-LAST:event_testeActionPerformed
 
+    public static String caminho(){
+        return caminho;
+    }
+    
     /**
      * @param args the command line arguments
      */
