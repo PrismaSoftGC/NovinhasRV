@@ -23,6 +23,7 @@ public class TirarFotoWebcam extends javax.swing.JFrame {
     private int validador = 0;
     private CadastroUsuario c;
     public static byte[] foto;
+    public static String caminho = "";
     
     public TirarFotoWebcam(CadastroUsuario obj) {
         initComponents();
@@ -193,7 +194,8 @@ public class TirarFotoWebcam extends javax.swing.JFrame {
     private void botaoTirarFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoTirarFotoActionPerformed
         EscolherCaminhoSalvarFoto escolher = new EscolherCaminhoSalvarFoto(this,true);
         escolher.setVisible(true);
-        String caminho = escolher.caminho();
+        String auxiliar = escolher.caminho();
+        caminho = auxiliar + "\\FotoUsuario.jpg";
         try {
              ByteArrayOutputStream buff = new ByteArrayOutputStream();
              ImageIO.write(webcam.getImage(), "jpg", buff);
@@ -212,7 +214,7 @@ public class TirarFotoWebcam extends javax.swing.JFrame {
              BufferedImage new_img = new BufferedImage(novaLargura, novaAltura, BufferedImage.TYPE_INT_RGB);
              Graphics2D g = new_img.createGraphics();
              g.drawImage(imagem, 0, 0, novaLargura, novaAltura, null);
-             ImageIO.write(new_img, "jpg", new File(caminho+"\\FotoUsuario.jpg"));
+             ImageIO.write(new_img, "jpg", new File(caminho));
          } catch (Exception e) {
              System.out.println(e.getMessage());
          }

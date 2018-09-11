@@ -22,6 +22,8 @@ public class CadastroUsuario extends javax.swing.JDialog {
 
     private Login instance;
     private EscolherFoto escolher;
+    private boolean clicouEmEscolherFoto = false;
+    private boolean clicouEmTirarFoto = false;
     
     public CadastroUsuario(java.awt.Frame parent, boolean modal,Login instance) {
         super(parent, modal);
@@ -406,7 +408,14 @@ public class CadastroUsuario extends javax.swing.JDialog {
                      textDescricao.getText(), prefSexo, prefEsporte, prefReligioso, prefMusica, prefGames, prefIdade,"");
             
             byte[] foto = TirarFotoWebcam.foto;
-            String caminho = escolher.caminho();
+            String caminho = "";
+            if (clicouEmEscolherFoto) {
+                caminho = escolher.caminho();
+            } else if (clicouEmTirarFoto) {
+                caminho = TirarFotoWebcam.caminho;
+                usuario.setCaminhoImagem(caminho);
+            }
+
             Conexao conexao = Login.getConexaoServidor();
             conexao.getSaida().flush();
             conexao.getSaida().writeUTF("CRIAR");
@@ -437,6 +446,8 @@ public class CadastroUsuario extends javax.swing.JDialog {
     }//GEN-LAST:event_botaoCadastrarActionPerformed
 
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+        clicouEmEscolherFoto = false;
+        clicouEmTirarFoto = true;
         new TirarFotoWebcam(this).setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jToggleButton1ActionPerformed
@@ -447,7 +458,9 @@ public class CadastroUsuario extends javax.swing.JDialog {
 
     private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
        escolher = new EscolherFoto(instance, true);
-        escolher.setVisible(true);
+       escolher.setVisible(true);
+       clicouEmEscolherFoto = true;
+       clicouEmTirarFoto = false;
     }//GEN-LAST:event_jToggleButton2ActionPerformed
 
 

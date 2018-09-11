@@ -54,8 +54,10 @@ public class EspacoCliente extends Thread {
                 if (comando.contains("CRIAR")) {
                     UsuarioBEAN aux = (UsuarioBEAN) entradaObjeto.readObject();
                     //byte[] foto = (byte[]) entradaObjeto.readObject();
-                    aux.setCaminhoImagem("C:\\Users\\adeja\\Desktop\\NovinhasRV\\Fotos Clientes\\" + aux.getNome() + ".jpg");
-                    FileOutputStream file = new FileOutputStream("C:\\Users\\adeja\\Desktop\\NovinhasRV\\Fotos Clientes\\" + aux.getNome() + ".jpg");
+                    if (!aux.getCaminhoImagem().contains("FotoUsuario")) {
+                        aux.setCaminhoImagem("C:\\Users\\Erick\\Desktop\\NovinhasRV\\NovinhasRV\\Fotos Clientes\\" + aux.getNome() + ".jpg");
+                    }
+                    FileOutputStream file = new FileOutputStream("C:\\Users\\Erick\\Desktop\\NovinhasRV\\NovinhasRV\\Fotos Clientes\\" + aux.getNome() + ".jpg");
                     byte[] buf = new byte[4096];
                     while (true) {
                         int len = entrada.read(buf);
