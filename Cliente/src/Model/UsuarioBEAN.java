@@ -2,6 +2,7 @@
 package Model;
 
 import java.io.Serializable;
+import java.net.Socket;
 
 
 public class UsuarioBEAN implements Serializable {

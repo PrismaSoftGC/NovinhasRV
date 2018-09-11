@@ -1,6 +1,9 @@
 
 package Servidor;
 
+import Model.Aux_conversaBEAN;
+import Model.ConversaBEAN;
+import Model.SolicitacaoBEAN;
 import Model.UsuarioBEAN;
 import java.util.ArrayList;
 
@@ -32,8 +35,69 @@ public class Controller {
     public ArrayList<UsuarioBEAN> listaUsuario(String nome) {
         return UsuarioDAO.getInstance().findAllUsuario(nome);
     }
+    /////////////////////////////////// AUX //////////////////////////////////////
     
-    public void insereImagem(byte[] foto, int idusuario) {
-        UsuarioDAO.getInstance().insereImagem(foto, idusuario);
+    public int addAux_Conversa(Aux_conversaBEAN aux) {
+        return Aux_conversaDAO.getInstance().create(aux);
+    }
+
+    public int updateAux(Aux_conversaBEAN aux) {
+        return Aux_conversaDAO.getInstance().update(aux);
+    }
+
+    public Aux_conversaBEAN findAux(int idAux) {
+        return Aux_conversaDAO.getInstance().findAux(idAux);
+    }
+
+    public int findIdAux(Aux_conversaBEAN aux) {
+        return Aux_conversaDAO.getInstance().findId(aux);
+    }
+
+    public ArrayList<Aux_conversaBEAN> listaAux() {
+        return Aux_conversaDAO.getInstance().findAllAux();
+    }
+    
+    ////////////////////////////////////// CONVERSA ////////////////////////////////
+    
+    public int addConversa(ConversaBEAN conversa) {
+        return ConversaDAO.getInstance().create(conversa);
+    }
+
+    public int updateConversa(ConversaBEAN conversa) {
+        return ConversaDAO.getInstance().update(conversa);
+    }
+
+    public ConversaBEAN findConversa(int idConversa) {
+        return ConversaDAO.getInstance().findConversa(idConversa);
+    }
+
+    public int findIdConversa(ConversaBEAN conversa) {
+        return ConversaDAO.getInstance().findId(conversa);
+    }
+
+    public ArrayList<ConversaBEAN> listaConversas() {
+        return ConversaDAO.getInstance().findAllConversa();
+    }
+    
+     ////////////////////////////////////// SOLICITAÇAO ////////////////////////////////
+    
+    public int addSolicitacao(SolicitacaoBEAN solicitacao) {
+        return SolicitacaoDAO.getInstance().create(solicitacao);
+    }
+
+    public int updateSolicitacao(SolicitacaoBEAN solicitacao) {
+        return SolicitacaoDAO.getInstance().update(solicitacao);
+    }
+
+    public SolicitacaoBEAN  findSolicitacao(int idSolicitacao) {
+        return SolicitacaoDAO.getInstance().findSolicitacao(idSolicitacao);
+    }
+
+    public int findIdSolicitacao(SolicitacaoBEAN solicitacao) {
+        return SolicitacaoDAO.getInstance().findId(solicitacao);
+    }
+
+    public ArrayList<SolicitacaoBEAN > listaSolicitacoes() {
+        return SolicitacaoDAO.getInstance().findAllSolicitacao();
     }
 }

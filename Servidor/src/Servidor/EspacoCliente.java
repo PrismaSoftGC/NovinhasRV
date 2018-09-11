@@ -117,6 +117,7 @@ public class EspacoCliente extends Thread {
                     if (notNull(aux)) {
                         saidaObjeto.writeObject(aux);
                         saidaObjeto.flush();
+                         aux = (UsuarioBEAN)entradaObjeto.readObject();
                     } else {
                         saidaObjeto.writeObject(null);
                         saidaObjeto.flush();
@@ -135,9 +136,7 @@ public class EspacoCliente extends Thread {
                         saidaObjeto.flush();
                     }
                 }else if(comando.contains("CONVERSA")){
-//                    UsuarioBEAN usuario1 = (UsuarioBEAN)entradaObjeto.readObject();
-//                    UsuarioBEAN usuario2 = (UsuarioBEAN)entradaObjeto.readObject();
-//                    SalaPrivada sala = new SalaPrivada(cliente,usuario1,usuario2);
+                   
                 }
             } catch (Exception ex) {
 
@@ -182,11 +181,6 @@ public class EspacoCliente extends Thread {
             return true;
         }
         return false;
-    }
-
-    // #########################################################################
-    private void insereImagem(byte[] foto) {
-        controle.insereImagem(foto, idusuario);
     }
 
     // #########################################################################

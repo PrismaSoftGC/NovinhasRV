@@ -60,7 +60,7 @@ public class UsuarioDAO {
         return lista;
     }
 
-    public UsuarioBEAN findUsuario(int idusuario) {;
+    public UsuarioBEAN findUsuario(int idusuario) {
         UsuarioBEAN result = null;
         ResultSet rs = null;
         rs = MySQLDAO.getResultSet("SELECT * FROM USUARIO WHERE idusuario=?", idusuario);
@@ -75,11 +75,7 @@ public class UsuarioDAO {
         }
         return result;
     }
-    
-    public void insereImagem(byte[] foto, int idusuario) {
-        MySQLDAO.insereImagem(foto, idusuario);
-    }
- 
+
     public int findId(UsuarioBEAN usuario) {
         int result = 0;
         ResultSet rs = null;
