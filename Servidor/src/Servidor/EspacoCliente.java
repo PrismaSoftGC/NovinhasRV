@@ -1,5 +1,6 @@
 package Servidor;
 
+import Model.SolicitacaoBEAN;
 import Model.UsuarioBEAN;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -35,7 +36,7 @@ public class EspacoCliente extends Thread {
     }
 
     @Override
-    public void run() {
+    public synchronized void run() {
         try {
             saida = new DataOutputStream(cliente.getOutputStream());
             entrada = new DataInputStream(cliente.getInputStream());
@@ -44,105 +45,119 @@ public class EspacoCliente extends Thread {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Erro: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
-        acao();
+        while (true) {
+            acao();
+        }
     }
 
     public synchronized void acao() {
-        while (true) {
-            try {
-                comando = entrada.readUTF();
-                if (comando.contains("CRIAR")) {
+        try {
+            comando = entrada.readUTF();
+            if (comando.contains("CRIAR")) {
+                UsuarioBEAN aux = (UsuarioBEAN) entradaObjeto.readObject();
+                //byte[] foto = (byte[]) entradaObjeto.readObject();
+                if (!aux.getCaminhoImagem().contains("FotoUsuario")) {
+                    aux.setCaminhoImagem("C:\\Users\\adeja\\Desktop\\NovinhasRV\\Fotos Clientes\\" + aux.getNome() + ".jpg");
+                }
+                FileOutputStream file = new FileOutputStream("C:\\Users\\adeja\\Desktop\\NovinhasRV\\Fotos Clientes\\" + aux.getNome() + ".jpg");
+                byte[] buf = new byte[4096];
+                while (true) {
+                    int len = entrada.read(buf);
+                    file.write(buf, 0, len);
+                    if (len < 4096) {
+                        break;
+                    }
+                }
+                if (notNull(aux)) {
+                    aux.setSenha(senhaToMd5(aux.getSenha()));
+                    boolean retorno = gravarUsuario(aux);
+                    saida.writeBoolean(retorno);
+                    //insereImagem(foto);
+                    saida.flush();
+                } else { // Se o usuario é nulo
+                    saida.writeBoolean(false);
+                    saida.flush();
+                }
+            } else if (comando.contains("ATUALIZAR")) {
+                UsuarioBEAN usuarioAntigo = buscarUsuario(entrada.readInt());
+                if (notNull(usuarioAntigo)) {
+                    saidaObjeto.writeObject(usuarioAntigo); // Envia informaçoes do usuario
+                    saida.flush();
+                    FileInputStream file2 = new FileInputStream(usuarioAntigo.getCaminhoImagem());
+                    BufferedImage image = ImageIO.read(file2);
+                    saidaObjeto.writeObject(retornaImagem(image));
+                    saidaObjeto.flush();
                     UsuarioBEAN aux = (UsuarioBEAN) entradaObjeto.readObject();
-                    //byte[] foto = (byte[]) entradaObjeto.readObject();
-                    if (!aux.getCaminhoImagem().contains("FotoUsuario")) {
-                        aux.setCaminhoImagem("C:\\Users\\Erick\\Desktop\\NovinhasRV\\NovinhasRV\\Fotos Clientes\\" + aux.getNome() + ".jpg");
-                    }
-                    FileOutputStream file = new FileOutputStream("C:\\Users\\Erick\\Desktop\\NovinhasRV\\NovinhasRV\\Fotos Clientes\\" + aux.getNome() + ".jpg");
-                    byte[] buf = new byte[4096];
-                    while (true) {
-                        int len = entrada.read(buf);
-                        file.write(buf, 0, len);
-                        if (len < 4096) {
-                            break;
-                        }
-                    }
                     if (notNull(aux)) {
-                        aux.setSenha(senhaToMd5(aux.getSenha()));
-                        boolean retorno = gravarUsuario(aux);
-                        saida.writeBoolean(retorno);
-                        //insereImagem(foto);
-                        saida.flush();
-                    } else { // Se o usuario é nulo
-                        saida.writeBoolean(false);
-                        saida.flush();
-                    }
-                } else if (comando.contains("ATUALIZAR")) {
-                    UsuarioBEAN usuarioAntigo = buscarUsuario(entrada.readInt());
-                    if (notNull(usuarioAntigo)) {
-                        saidaObjeto.writeObject(usuarioAntigo); // Envia informaçoes do usuario
-                        saida.flush();
-                        FileInputStream file2 = new FileInputStream(usuarioAntigo.getCaminhoImagem());
-                        BufferedImage image = ImageIO.read(file2);
-                        saidaObjeto.writeObject(retornaImagem(image));
-                        saidaObjeto.flush();
-                        UsuarioBEAN aux = (UsuarioBEAN) entradaObjeto.readObject();
-                        if (notNull(aux)) {
-                            if (entrada.readInt() == 1) {
-                                aux.setCaminhoImagem("C:\\Users\\adeja\\Desktop\\NovinhasRV\\Fotos Clientes\\" + aux.getNome() + ".jpg");
-                                FileOutputStream file = new FileOutputStream("C:\\Users\\adeja\\Desktop\\NovinhasRV\\Fotos Clientes\\" + aux.getNome() + ".jpg");
-                                byte[] buf = new byte[4096];
-                                while (true) {
-                                    int len = entrada.read(buf);
-                                    System.out.println(len);
-                                    file.write(buf, 0, len);
-                                    if (len < 4096) {
-                                        break;
-                                    }
+                        if (entrada.readInt() == 1) {
+                            aux.setCaminhoImagem("C:\\Users\\adeja\\Desktop\\NovinhasRV\\Fotos Clientes\\" + aux.getNome() + ".jpg");
+                            FileOutputStream file = new FileOutputStream("C:\\Users\\adeja\\Desktop\\NovinhasRV\\Fotos Clientes\\" + aux.getNome() + ".jpg");
+                            byte[] buf = new byte[4096];
+                            while (true) {
+                                int len = entrada.read(buf);
+                                System.out.println(len);
+                                file.write(buf, 0, len);
+                                if (len < 4096) {
+                                    break;
                                 }
                             }
-                            boolean retorno = atualizarUsuario(aux);
-                            saida.writeBoolean(retorno);
-                            saida.flush();
-                        } else {
-                            saida.writeBoolean(false);
-                            saida.flush();
                         }
-                    } else { // Se o usuario é nulo
+                        boolean retorno = atualizarUsuario(aux);
+                        saida.writeBoolean(retorno);
+                        saida.flush();
+                    } else {
                         saida.writeBoolean(false);
                         saida.flush();
                     }
-                } else if (comando.contains("BUSCAR USUARIO")) {
-                    String login = entrada.readUTF();
-                    String senha = senhaToMd5(entrada.readUTF());
-                    //String senha = entrada.readUTF();
-                    UsuarioBEAN aux = buscarUsuario(login, senha);
-                    if (notNull(aux)) {
-                        saidaObjeto.writeObject(aux);
-                        saidaObjeto.flush();
-                         aux = (UsuarioBEAN)entradaObjeto.readObject();
-                    } else {
-                        saidaObjeto.writeObject(null);
-                        saidaObjeto.flush();
-                    }
-                } else if (comando.contains("ENCONTRAR")) {
-                    UsuarioBEAN aux = (UsuarioBEAN) entradaObjeto.readObject();
-                    if (notNull(aux)) {
-                        saidaObjeto.writeObject(encontrarCompanhia(aux));
-                        FileInputStream file2 = new FileInputStream(encontrarCompanhia(aux).getCaminhoImagem());
-                        BufferedImage image = ImageIO.read(file2);
-                        saidaObjeto.writeObject(retornaImagem(image));
-                        saidaObjeto.flush();
-
-                    } else {
-                        saidaObjeto.writeObject(null);
-                        saidaObjeto.flush();
-                    }
-                }else if(comando.contains("CONVERSA")){
-                   
+                } else { // Se o usuario é nulo
+                    saida.writeBoolean(false);
+                    saida.flush();
                 }
-            } catch (Exception ex) {
-
+            } else if (comando.contains("BUSCAR USUARIO")) {
+                String login = entrada.readUTF();
+                String senha = senhaToMd5(entrada.readUTF());
+                UsuarioBEAN aux = buscarUsuario(login, senha);
+                if (notNull(aux)) {
+                    saidaObjeto.writeObject(aux);
+                    saidaObjeto.flush();
+                    // aux = (UsuarioBEAN)entradaObjeto.readObject();
+                } else {
+                    saidaObjeto.writeObject(null);
+                    saidaObjeto.flush();
+                }
+            } else if (comando.contains("ENCONTRAR")) {
+                UsuarioBEAN aux = (UsuarioBEAN) entradaObjeto.readObject();
+                if (notNull(aux)) {
+                    saidaObjeto.writeObject(encontrarCompanhia(aux));
+                    FileInputStream file2 = new FileInputStream(encontrarCompanhia(aux).getCaminhoImagem());
+                    BufferedImage image = ImageIO.read(file2);
+                    saidaObjeto.writeObject(retornaImagem(image));
+                    saidaObjeto.flush();
+                } else {
+                    System.out.println("aqui");
+                    saidaObjeto.writeObject(null);
+                    saidaObjeto.flush();
+                }
+            } else if (comando.contains("CONVERSA")) {
+                 
+            } else if (comando.contains("VERIFICAR SOLICITACAO")) {
+                int codigo2 = entrada.readInt();
+                UsuarioBEAN usuario = verificarSolicitacao(codigo2);
+                saidaObjeto.writeObject(usuario);
+                saidaObjeto.flush();
+            } else if (comando.contains("ENVIAR SOLICITACAO")) {
+                UsuarioBEAN solicitante = (UsuarioBEAN) entradaObjeto.readObject();
+                UsuarioBEAN solicitado =(UsuarioBEAN) entradaObjeto.readObject();
+                salvarSolicitacao(solicitante,solicitado);
+                boolean controle = verificarSolicitacao(solicitante.getId(), solicitado.getId());
+                while(controle == false){
+                    controle = verificarSolicitacao(solicitante.getId(), solicitado.getId());
+                }
+                saida.writeBoolean(true);
+                saida.flush();
             }
+        } catch (Exception ex) {
+
         }
     }
 
@@ -154,6 +169,37 @@ public class EspacoCliente extends Thread {
         } else {
             System.out.println("VAZIO!!!");
         }
+    }
+
+    // #########################################################################
+    private void salvarSolicitacao(UsuarioBEAN usuario1, UsuarioBEAN usuario2) {
+        SolicitacaoBEAN solicitacao = new SolicitacaoBEAN(0, usuario1.getId(), usuario2.getId(), "ESPERANDO");
+        controle.addSolicitacao(solicitacao);
+    }
+
+    // #########################################################################
+    private UsuarioBEAN verificarSolicitacao(int codigoCliente2) {
+        ArrayList<SolicitacaoBEAN> lista = controle.findSolicitacaoPorCliente(codigoCliente2);
+        for (SolicitacaoBEAN umaSolicitacao : lista) {
+            if (umaSolicitacao.getAceitar().equals("ESPERANDO")) {
+                // VAI ENVIAR O CLIENTE QUEM PEDIU PARA CONVERSAR
+                UsuarioBEAN usuarioMandouSolicitacao = controle.findUsuario(umaSolicitacao.getCodigoCliente1());
+                umaSolicitacao.setAceitar("ACEITO");
+                controle.updateSolicitacao(umaSolicitacao);
+                return usuarioMandouSolicitacao;
+            }
+        }
+        return null;
+    }
+    
+    private boolean verificarSolicitacao(int codigoCliente1, int codigoCliente2) {
+        ArrayList<SolicitacaoBEAN> lista = controle.findSolicitacaoPorCliente(codigoCliente2);
+        for (SolicitacaoBEAN umaSolicitacao : lista) {
+            if (umaSolicitacao.getAceitar().equals("ACEITO") && umaSolicitacao.getCodigoCliente1() == codigoCliente1) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // #########################################################################

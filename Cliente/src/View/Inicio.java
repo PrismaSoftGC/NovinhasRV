@@ -36,7 +36,6 @@ public class Inicio extends javax.swing.JFrame {
             conexao.getSaidaObjeto().flush();
             usuarioCompativel = (UsuarioBEAN) conexao.getEntradaObjeto().readObject();
             
-            
             byte imagem[] = (byte[]) conexao.getEntradaObjeto().readObject();
 
             ImageIcon im = new ImageIcon(imagem);
@@ -93,6 +92,7 @@ public class Inicio extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        jMenu3 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -180,13 +180,21 @@ public class Inicio extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Sobre");
+        jMenu2.setText("Verificar Solicitações");
         jMenu2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jMenu2MouseClicked(evt);
             }
         });
         jMenuBar1.add(jMenu2);
+
+        jMenu3.setText("Sobre");
+        jMenu3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu3MouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(jMenu3);
 
         setJMenuBar(jMenuBar1);
 
@@ -273,24 +281,48 @@ public class Inicio extends javax.swing.JFrame {
     private void botaoConversarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoConversarActionPerformed
         Chat chat;
         try {
-            conexao.getSaida().writeUTF("CONVERSAR");
+            conexao.getSaida().writeUTF("ENVIAR SOLICITACAO");
             conexao.getSaidaObjeto().writeObject(usuario);
+            conexao.getSaidaObjeto().flush();
             conexao.getSaidaObjeto().writeObject(usuarioCompativel);
-            chat = new Chat();
-            chat.setVisible(true);
+            conexao.getSaidaObjeto().flush();
+            if(conexao.getEntrada().readBoolean() == true){
+                 JOptionPane.showMessageDialog(null, "POVE CONVERSAR");
+                 
+            }
+//            chat = new Chat();
+//            chat.setVisible(true);
         } catch (IOException ex) {
             Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_botaoConversarActionPerformed
 
     private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
-        Sobre sobre = new Sobre(this, true);
-        sobre.setVisible(true);
+        try {
+            conexao.getSaida().writeUTF("VERIFICAR SOLICITACAO");
+            conexao.getSaida().flush();
+            conexao.getSaida().writeInt(usuario.getId());
+            UsuarioBEAN usuarioCompativel = (UsuarioBEAN)conexao.getEntradaObjeto().readObject();
+            if(usuarioCompativel == null){
+                JOptionPane.showMessageDialog(null, "AINDA NENHUMA SOLICITAÇÃO");
+            }else{
+                JOptionPane.showMessageDialog(null, "ENTROU, MAS COMO?");
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jMenu2MouseClicked
 
     private void botaoRecusarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoRecusarActionPerformed
 
     }//GEN-LAST:event_botaoRecusarActionPerformed
+
+    private void jMenu3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu3MouseClicked
+        Sobre sobre = new Sobre(this, true);
+        sobre.setVisible(true);
+    }//GEN-LAST:event_jMenu3MouseClicked
 
     /**
      * @param args the command line arguments
@@ -333,6 +365,7 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JLabel exibeimagem;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;

@@ -29,15 +29,15 @@ public class SolicitacaoDAO {
     }
 
     public int update(SolicitacaoBEAN solicitacao) {
-        String query = "UPDATE solicitacao SET codigoCliente1, codigoCliente2 WHERE codigoSolicitacao = ?";
-        return (int) MySQLDAO.executeQuery(query,solicitacao.getCodigoCliente1(),solicitacao.getCodigoCliente2(),solicitacao.getAceitar());
+        String query = "UPDATE solicitacao SET codigoCliente1=?, codigoCliente2=?, aceitar=? WHERE codigoSolicitacao= ?";
+        return (int) MySQLDAO.executeQuery(query,solicitacao.getCodigoCliente1(),solicitacao.getCodigoCliente2(),solicitacao.getAceitar(),solicitacao.getCodigoSolicitacao());
     }
 
     public ArrayList<SolicitacaoBEAN  > findAllSolicitacao() {
         return listaSolicitacao("SELECT * FROM solicitacao ORDER BY codigoSolicitacao");
     }
 
-    public ArrayList<SolicitacaoBEAN > listaSolicitacao(String query) {
+    public ArrayList<SolicitacaoBEAN> listaSolicitacao(String query) {
         ArrayList<SolicitacaoBEAN > lista = new ArrayList<SolicitacaoBEAN  >();
         ResultSet rs = null;
         rs = MySQLDAO.getResultSet(query);
@@ -52,7 +52,7 @@ public class SolicitacaoDAO {
         return lista;
     }
 
-    public SolicitacaoBEAN  findSolicitacao(int codigoSolicitacao) {
+    public SolicitacaoBEAN findSolicitacao(int codigoSolicitacao) {
         SolicitacaoBEAN    result = null;
         ResultSet rs = null;
         rs = MySQLDAO.getResultSet("SELECT * FROM solicitacao WHERE codigoSolicitacao=?", codigoSolicitacao);
@@ -65,6 +65,21 @@ public class SolicitacaoDAO {
             e.printStackTrace();
         }
         return result;
+    }
+    
+    public ArrayList<SolicitacaoBEAN> findSolicitacaoPorCliente(int codigoCliente2) {
+        ArrayList<SolicitacaoBEAN > lista = new ArrayList<SolicitacaoBEAN  >();
+        ResultSet rs = null;
+        rs = MySQLDAO.getResultSet("SELECT * FROM solicitacao WHERE codigoCliente2=?", codigoCliente2);
+        try {
+            while(rs.next()) {
+                lista.add(new SolicitacaoBEAN (rs.getInt("codigoSolicitacao"), rs.getInt("codigoCliente1"),rs.getInt("codigoCLiente2"),rs.getString("aceitar")));
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
     }
 
     public int findId(SolicitacaoBEAN  solicitacao) {

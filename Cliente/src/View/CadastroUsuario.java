@@ -159,7 +159,7 @@ public class CadastroUsuario extends javax.swing.JDialog {
 
         jLabel2.setBackground(new java.awt.Color(0, 0, 0));
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel2.setText("Interesse em Sexo?");
+        jLabel2.setText("Sexo de Interesse:");
 
         comboMusica.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SIM", "NÃO" }));
 
@@ -189,7 +189,7 @@ public class CadastroUsuario extends javax.swing.JDialog {
         labelLogin1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         labelLogin1.setText("Preferência de Idade?");
 
-        comboIdade.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "18-29", "30-39", "40-49", "50-59", "+60" }));
+        comboIdade.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SIM", "NÃO" }));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);

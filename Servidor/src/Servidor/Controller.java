@@ -97,7 +97,11 @@ public class Controller {
         return SolicitacaoDAO.getInstance().findId(solicitacao);
     }
 
-    public ArrayList<SolicitacaoBEAN > listaSolicitacoes() {
+    public ArrayList<SolicitacaoBEAN> listaSolicitacoes() {
         return SolicitacaoDAO.getInstance().findAllSolicitacao();
+    }
+    
+    public  ArrayList<SolicitacaoBEAN> findSolicitacaoPorCliente(int codigoCliente2){
+        return SolicitacaoDAO.getInstance().findSolicitacaoPorCliente(codigoCliente2);
     }
 }
