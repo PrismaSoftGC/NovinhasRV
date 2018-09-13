@@ -9,9 +9,9 @@ import javax.swing.JOptionPane;
 
 public class UsuarioDAO {
     
-    private static UsuarioDAO instance;
+   private static UsuarioDAO instance;
 
-    private UsuarioDAO() {
+    UsuarioDAO() {
         MySQLDAO.getConnection();
     }
 
@@ -21,8 +21,8 @@ public class UsuarioDAO {
         }
         return instance;
     }
-
-    public int create(UsuarioBEAN usuario) {
+    
+    public  int create(UsuarioBEAN usuario) {
         String query = "INSERT INTO USUARIO (nome, login ,email, senha, idade, descricao, prefSexo, prefEsporte, prefReligioso, prefMusica, prefGames, prefIdade,caminhoImagem) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
         int id = (int) MySQLDAO.executeQuery(query, usuario.getNome(),usuario.getLogin() ,usuario.getEmail(), usuario.getSenha(), usuario.getIdade(), usuario.getDescricao(), usuario.getPrefSexo()
                                             , usuario.getPrefEsporte(), usuario.getPrefReligioso(), usuario.getPrefMusica(), usuario.getPrefGames(), usuario.getPrefIdade(),usuario.getCaminhoImagem());

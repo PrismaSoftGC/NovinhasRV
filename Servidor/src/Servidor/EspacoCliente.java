@@ -21,10 +21,10 @@ import javax.swing.JOptionPane;
 public class EspacoCliente extends Thread {
 
     private Socket cliente = null;
-    private static DataInputStream entrada = null;
-    private static DataOutputStream saida = null;
-    private static ObjectOutputStream saidaObjeto = null;
-    private static ObjectInputStream entradaObjeto = null;
+    private DataInputStream entrada = null;
+    private DataOutputStream saida = null;
+    private ObjectOutputStream saidaObjeto = null;
+    private ObjectInputStream entradaObjeto = null;
     private String comando;
     private Controller controle;
     private int idusuario;
@@ -42,10 +42,12 @@ public class EspacoCliente extends Thread {
             entrada = new DataInputStream(cliente.getInputStream());
             saidaObjeto = new ObjectOutputStream(cliente.getOutputStream());
             entradaObjeto = new ObjectInputStream(cliente.getInputStream());
+
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Erro: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
         while (true) {
+            System.out.println("codigo - " + entradaObjeto.toString());
             acao();
         }
     }
@@ -53,9 +55,9 @@ public class EspacoCliente extends Thread {
     public synchronized void acao() {
         try {
             comando = entrada.readUTF();
+
             if (comando.contains("CRIAR")) {
                 UsuarioBEAN aux = (UsuarioBEAN) entradaObjeto.readObject();
-                //byte[] foto = (byte[]) entradaObjeto.readObject();
                 if (!aux.getCaminhoImagem().contains("FotoUsuario")) {
                     aux.setCaminhoImagem("C:\\Users\\adeja\\Desktop\\NovinhasRV\\Fotos Clientes\\" + aux.getNome() + ".jpg");
                 }
@@ -95,7 +97,6 @@ public class EspacoCliente extends Thread {
                             byte[] buf = new byte[4096];
                             while (true) {
                                 int len = entrada.read(buf);
-                                System.out.println(len);
                                 file.write(buf, 0, len);
                                 if (len < 4096) {
                                     break;
@@ -120,7 +121,6 @@ public class EspacoCliente extends Thread {
                 if (notNull(aux)) {
                     saidaObjeto.writeObject(aux);
                     saidaObjeto.flush();
-                    // aux = (UsuarioBEAN)entradaObjeto.readObject();
                 } else {
                     saidaObjeto.writeObject(null);
                     saidaObjeto.flush();
@@ -134,12 +134,11 @@ public class EspacoCliente extends Thread {
                     saidaObjeto.writeObject(retornaImagem(image));
                     saidaObjeto.flush();
                 } else {
-                    System.out.println("aqui");
                     saidaObjeto.writeObject(null);
                     saidaObjeto.flush();
                 }
             } else if (comando.contains("CONVERSA")) {
-                 
+
             } else if (comando.contains("VERIFICAR SOLICITACAO")) {
                 int codigo2 = entrada.readInt();
                 UsuarioBEAN usuario = verificarSolicitacao(codigo2);
@@ -147,14 +146,20 @@ public class EspacoCliente extends Thread {
                 saidaObjeto.flush();
             } else if (comando.contains("ENVIAR SOLICITACAO")) {
                 UsuarioBEAN solicitante = (UsuarioBEAN) entradaObjeto.readObject();
-                UsuarioBEAN solicitado =(UsuarioBEAN) entradaObjeto.readObject();
-                salvarSolicitacao(solicitante,solicitado);
+                UsuarioBEAN solicitado = (UsuarioBEAN) entradaObjeto.readObject();
+                salvarSolicitacao(solicitante, solicitado);
                 boolean controle = verificarSolicitacao(solicitante.getId(), solicitado.getId());
-                while(controle == false){
+                while (controle == false) {
                     controle = verificarSolicitacao(solicitante.getId(), solicitado.getId());
                 }
                 saida.writeBoolean(true);
                 saida.flush();
+            } else if (comando.contains("ENVIAR FOTO")) {
+                UsuarioBEAN aux = (UsuarioBEAN) entradaObjeto.readObject();
+                FileInputStream file2 = new FileInputStream(encontrarFoto(aux).getCaminhoImagem());
+                BufferedImage image = ImageIO.read(file2);
+                saidaObjeto.writeObject(retornaImagem(image));
+                saidaObjeto.flush();
             }
         } catch (Exception ex) {
 
@@ -172,13 +177,13 @@ public class EspacoCliente extends Thread {
     }
 
     // #########################################################################
-    private void salvarSolicitacao(UsuarioBEAN usuario1, UsuarioBEAN usuario2) {
+    private synchronized void salvarSolicitacao(UsuarioBEAN usuario1, UsuarioBEAN usuario2) {
         SolicitacaoBEAN solicitacao = new SolicitacaoBEAN(0, usuario1.getId(), usuario2.getId(), "ESPERANDO");
         controle.addSolicitacao(solicitacao);
     }
 
     // #########################################################################
-    private UsuarioBEAN verificarSolicitacao(int codigoCliente2) {
+    private synchronized UsuarioBEAN verificarSolicitacao(int codigoCliente2) {
         ArrayList<SolicitacaoBEAN> lista = controle.findSolicitacaoPorCliente(codigoCliente2);
         for (SolicitacaoBEAN umaSolicitacao : lista) {
             if (umaSolicitacao.getAceitar().equals("ESPERANDO")) {
@@ -191,8 +196,8 @@ public class EspacoCliente extends Thread {
         }
         return null;
     }
-    
-    private boolean verificarSolicitacao(int codigoCliente1, int codigoCliente2) {
+
+    private synchronized boolean verificarSolicitacao(int codigoCliente1, int codigoCliente2) {
         ArrayList<SolicitacaoBEAN> lista = controle.findSolicitacaoPorCliente(codigoCliente2);
         for (SolicitacaoBEAN umaSolicitacao : lista) {
             if (umaSolicitacao.getAceitar().equals("ACEITO") && umaSolicitacao.getCodigoCliente1() == codigoCliente1) {
@@ -203,7 +208,7 @@ public class EspacoCliente extends Thread {
     }
 
     // #########################################################################
-    private boolean notNull(UsuarioBEAN usuario) {
+    private synchronized boolean notNull(UsuarioBEAN usuario) {
         return usuario == null ? false : true;
     }
 
@@ -223,7 +228,7 @@ public class EspacoCliente extends Thread {
     }
 
     // #########################################################################
-    private boolean gravarUsuario(UsuarioBEAN usuario) {
+    private synchronized boolean gravarUsuario(UsuarioBEAN usuario) {
         idusuario = controle.addUsuario(usuario);
         if (controle.findIdUsuario(usuario) >= 0) {
             return true;
@@ -232,7 +237,7 @@ public class EspacoCliente extends Thread {
     }
 
     // #########################################################################
-    private boolean atualizarUsuario(UsuarioBEAN usuario) {
+    private synchronized boolean atualizarUsuario(UsuarioBEAN usuario) {
         UsuarioBEAN usuario_antigo = controle.findUsuario(usuario.getId());
         controle.updateUsuario(usuario);
         if (controle.findUsuario(usuario.getId()).equals(usuario_antigo)) {
@@ -242,7 +247,7 @@ public class EspacoCliente extends Thread {
     }
 
     // #########################################################################
-    private UsuarioBEAN buscarUsuario(String login, String senha) {
+    private synchronized UsuarioBEAN buscarUsuario(String login, String senha) {
         ArrayList<UsuarioBEAN> usuarios = controle.listaUsuarios();
         for (UsuarioBEAN usuario : usuarios) {
             if (usuario.getLogin().equals(login) && usuario.getSenha().equals(senha)) {
@@ -253,12 +258,12 @@ public class EspacoCliente extends Thread {
     }
 
     // #########################################################################
-    private UsuarioBEAN buscarUsuario(int id_usuario) {
+    private synchronized UsuarioBEAN buscarUsuario(int id_usuario) {
         return controle.findUsuario(id_usuario);
     }
 
     // #########################################################################
-    private UsuarioBEAN encontrarCompanhia(UsuarioBEAN usuario) {
+    private synchronized UsuarioBEAN encontrarCompanhia(UsuarioBEAN usuario) {
         ArrayList<UsuarioBEAN> usuarios = controle.listaUsuarios();
         for (UsuarioBEAN aux : usuarios) {
             if (aux.getLogin() != usuario.getLogin() && aux.getPrefEsporte() == usuario.getPrefEsporte()
@@ -272,9 +277,15 @@ public class EspacoCliente extends Thread {
         }
         return null;
     }
+    
+     // #########################################################################
+    private synchronized UsuarioBEAN encontrarFoto(UsuarioBEAN usuario) {
+        UsuarioBEAN usuarioAux = controle.findUsuario(usuario.getId());
+        return usuarioAux;
+    }
 
     // #########################################################################
-    private String senhaToMd5(String senha) {
+    private synchronized String senhaToMd5(String senha) {
         try {
             MessageDigest algoritmo = MessageDigest.getInstance("MD5");
             byte messageDigest[] = algoritmo.digest(senha.getBytes("UTF-8"));

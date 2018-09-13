@@ -43,8 +43,6 @@ public class Perfil extends javax.swing.JFrame {
             ImageIcon im = new ImageIcon(imagem);
             exibeimagem.setIcon(new ImageIcon(im.getImage().getScaledInstance(200, 200, Image.SCALE_DEFAULT)));
    
-            
-            
         } catch (IOException ex) {
             Logger.getLogger(Perfil.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -433,7 +431,6 @@ public class Perfil extends javax.swing.JFrame {
                     conexao.getSaida().write(buf, 0, len);
                     conexao.getSaida().flush();
                 }
-                conexao.getSaida().flush();
             }else{
                 conexao.getSaida().writeInt(0);
                 conexao.getSaida().flush();

@@ -288,10 +288,9 @@ public class Inicio extends javax.swing.JFrame {
             conexao.getSaidaObjeto().flush();
             if(conexao.getEntrada().readBoolean() == true){
                  JOptionPane.showMessageDialog(null, "POVE CONVERSAR");
-                 
             }
-//            chat = new Chat();
-//            chat.setVisible(true);
+          chat = new Chat(usuario,usuarioCompativel);
+           chat.setVisible(true);
         } catch (IOException ex) {
             Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -306,7 +305,8 @@ public class Inicio extends javax.swing.JFrame {
             if(usuarioCompativel == null){
                 JOptionPane.showMessageDialog(null, "AINDA NENHUMA SOLICITAÇÃO");
             }else{
-                JOptionPane.showMessageDialog(null, "ENTROU, MAS COMO?");
+                Chat chat = new Chat(usuario,usuarioCompativel);
+                chat.setVisible(true);
             }
         } catch (IOException ex) {
             Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
