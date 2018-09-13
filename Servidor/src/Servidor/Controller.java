@@ -52,8 +52,8 @@ public class Controller {
         return Aux_conversaDAO.getInstance().findAux(idAux);
     }
 
-    public int findIdAux(Aux_conversaBEAN aux) {
-        return Aux_conversaDAO.getInstance().findId(aux);
+    public ArrayList<Aux_conversaBEAN> findConversas (int codigoConversa) {
+        return Aux_conversaDAO.getInstance().findConversas(codigoConversa);
     }
 
     public ArrayList<Aux_conversaBEAN> listaAux() {

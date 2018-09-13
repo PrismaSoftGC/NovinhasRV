@@ -413,7 +413,7 @@ public class CadastroUsuario extends javax.swing.JDialog {
                 caminho = escolher.caminho();
             } else if (clicouEmTirarFoto) {
                 caminho = TirarFotoWebcam.caminho;
-                usuario.setCaminhoImagem(caminho);
+                //usuario.setCaminhoImagem(caminho);
             }
 
             Conexao conexao = Login.getConexaoServidor();
@@ -422,10 +422,12 @@ public class CadastroUsuario extends javax.swing.JDialog {
             conexao.getSaida().flush();
             conexao.getSaidaObjeto().writeObject(usuario);
             conexao.getSaida().flush();
+            System.out.println(caminho);
             FileInputStream file = new FileInputStream(caminho);
             byte[] buf = new byte[4096];
             while(true){
                 int len = file.read(buf);
+                System.out.println(len);
                 if(len == -1){ 
                     break;
                 }

@@ -70,19 +70,19 @@ public class Aux_conversaDAO {
     }
    
  
-    public int findId(Aux_conversaBEAN aux) {
-        int result = 0;
+    public ArrayList<Aux_conversaBEAN> findConversas(int codigoConversa) {
+        ArrayList<Aux_conversaBEAN> lista = new ArrayList<Aux_conversaBEAN>();
         ResultSet rs = null;
-        rs = MySQLDAO.getResultSet("SELECT * FROM AUX_CONVERSA WHERE codigoConversa=? ", aux.getCodigoConversa());
+        rs = MySQLDAO.getResultSet("SELECT * FROM AUX_CONVERSA WHERE codigoConversa=? ", codigoConversa);
         try {
-            if (rs.next()) {
-                result = rs.getInt("codigoConversa");
+            while (rs.next()) {
+                lista.add(new Aux_conversaBEAN(rs.getInt("codigoConversa"), rs.getString("mensagem")));
             }
             rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return result;
+        return lista;
     }
     
 }

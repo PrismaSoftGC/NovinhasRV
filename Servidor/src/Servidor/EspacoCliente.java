@@ -1,5 +1,7 @@
 package Servidor;
 
+import Model.Aux_conversaBEAN;
+import Model.ConversaBEAN;
 import Model.SolicitacaoBEAN;
 import Model.UsuarioBEAN;
 import java.awt.image.BufferedImage;
@@ -47,7 +49,6 @@ public class EspacoCliente extends Thread {
             JOptionPane.showMessageDialog(null, "Erro: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
         while (true) {
-            System.out.println("codigo - " + entradaObjeto.toString());
             acao();
         }
     }
@@ -55,7 +56,6 @@ public class EspacoCliente extends Thread {
     public synchronized void acao() {
         try {
             comando = entrada.readUTF();
-
             if (comando.contains("CRIAR")) {
                 UsuarioBEAN aux = (UsuarioBEAN) entradaObjeto.readObject();
                 if (!aux.getCaminhoImagem().contains("FotoUsuario")) {
@@ -160,10 +160,62 @@ public class EspacoCliente extends Thread {
                 BufferedImage image = ImageIO.read(file2);
                 saidaObjeto.writeObject(retornaImagem(image));
                 saidaObjeto.flush();
+            } else if (comando.contains("ENVIAR MENSAGEM")) {
+                String mensagem = entrada.readUTF();
+                UsuarioBEAN usuario1 = (UsuarioBEAN) entradaObjeto.readObject();
+                UsuarioBEAN usuario2 = (UsuarioBEAN) entradaObjeto.readObject();
+                enviarMensagem(usuario1, usuario2, mensagem);
+                
+            } else if (comando.contains("RECEBER MENSAGEM MENSASSEM")) {
+                UsuarioBEAN usuario1 = (UsuarioBEAN) entradaObjeto.readObject();
+                UsuarioBEAN usuario2 = (UsuarioBEAN) entradaObjeto.readObject();
+                String mensagem = receberMensagem(usuario1, usuario2);
+                saida.writeUTF(mensagem);
+                saida.flush();
+                System.out.println(cliente.toString());
+                System.out.println(mensagem);
             }
         } catch (Exception ex) {
 
         }
+    }
+
+    // #########################################################################
+    private synchronized void enviarMensagem(UsuarioBEAN usuario1, UsuarioBEAN usuario2, String mensagem) {
+        ConversaBEAN conversa = new ConversaBEAN(0, usuario1.getId(), usuario2.getId());
+        int codigo = controle.findIdConversa(conversa);
+        // Esse IF serve para envitar criar 2 conversas diferentes
+        if (codigo == 0) {
+            conversa = new ConversaBEAN(0, usuario2.getId(), usuario1.getId());
+            codigo = controle.findIdConversa(conversa);
+        }
+        if (codigo == 0) {
+            controle.addConversa(conversa);
+            Aux_conversaBEAN aux_conversa = new Aux_conversaBEAN(conversa.getCodigoConversa(), mensagem);
+            controle.addAux_Conversa(aux_conversa);
+
+        } else {
+            Aux_conversaBEAN aux_conversa = new Aux_conversaBEAN(codigo, mensagem);
+            controle.addAux_Conversa(aux_conversa);
+        }
+    }
+
+    // #########################################################################
+    private synchronized String receberMensagem(UsuarioBEAN usuario1, UsuarioBEAN usuario2) {
+        String retorno="";
+        ConversaBEAN conversa = new ConversaBEAN(0, usuario1.getId(), usuario2.getId());
+        int codigo = controle.findIdConversa(conversa);
+        // Esse IF serve para envitar criar 2 conversas diferentes
+        if (codigo == 0) {
+            conversa = new ConversaBEAN(0, usuario2.getId(), usuario1.getId());
+            codigo = controle.findIdConversa(conversa);
+        }
+        ArrayList<Aux_conversaBEAN> lista = controle.findConversas(codigo);
+        for(Aux_conversaBEAN umaConversa: lista){
+            retorno+=umaConversa.getMensage();
+            retorno+="\n";
+        }
+        return retorno;
     }
 
     // #########################################################################
@@ -277,8 +329,8 @@ public class EspacoCliente extends Thread {
         }
         return null;
     }
-    
-     // #########################################################################
+
+    // #########################################################################
     private synchronized UsuarioBEAN encontrarFoto(UsuarioBEAN usuario) {
         UsuarioBEAN usuarioAux = controle.findUsuario(usuario.getId());
         return usuarioAux;

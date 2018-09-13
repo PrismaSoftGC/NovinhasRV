@@ -30,6 +30,7 @@ public class Inicio extends javax.swing.JFrame {
             setLocationRelativeTo(null);
             desativarBotoes();
             this.usuario = usuario;
+            this.setTitle(usuario.getNome());
             conexao.getSaida().writeUTF("ENCONTRAR");
             conexao.getSaida().flush();
             conexao.getSaidaObjeto().writeObject(this.usuario);
