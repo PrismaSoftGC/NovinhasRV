@@ -17,6 +17,7 @@ import java.net.Socket;
 import java.security.*;
 import java.math.*;
 import java.util.ArrayList;
+import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
@@ -128,8 +129,9 @@ public class EspacoCliente extends Thread {
             } else if (comando.contains("ENCONTRAR")) {
                 UsuarioBEAN aux = (UsuarioBEAN) entradaObjeto.readObject();
                 if (notNull(aux)) {
-                    saidaObjeto.writeObject(encontrarCompanhia(aux));
-                    FileInputStream file2 = new FileInputStream(encontrarCompanhia(aux).getCaminhoImagem());
+                    UsuarioBEAN usuarioCompativel =encontrarCompanhia(aux);
+                    saidaObjeto.writeObject(usuarioCompativel);
+                    FileInputStream file2 = new FileInputStream(usuarioCompativel.getCaminhoImagem());
                     BufferedImage image = ImageIO.read(file2);
                     saidaObjeto.writeObject(retornaImagem(image));
                     saidaObjeto.flush();
@@ -149,10 +151,10 @@ public class EspacoCliente extends Thread {
                 UsuarioBEAN solicitado = (UsuarioBEAN) entradaObjeto.readObject();
                 salvarSolicitacao(solicitante, solicitado);
                 boolean controle = verificarSolicitacao(solicitante.getId(), solicitado.getId());
-                while (controle == false) {
-                    controle = verificarSolicitacao(solicitante.getId(), solicitado.getId());
-                }
-                saida.writeBoolean(true);
+//                while (controle == false) {
+//                    controle = verificarSolicitacao(solicitante.getId(), solicitado.getId());
+//                }
+                saida.writeBoolean(controle);
                 saida.flush();
             } else if (comando.contains("ENVIAR FOTO")) {
                 UsuarioBEAN aux = (UsuarioBEAN) entradaObjeto.readObject();
@@ -165,15 +167,15 @@ public class EspacoCliente extends Thread {
                 UsuarioBEAN usuario1 = (UsuarioBEAN) entradaObjeto.readObject();
                 UsuarioBEAN usuario2 = (UsuarioBEAN) entradaObjeto.readObject();
                 enviarMensagem(usuario1, usuario2, mensagem);
-                
-            } else if (comando.contains("RECEBER MENSAGEM MENSASSEM")) {
+
+            } else if (comando.contains("RECEBER MENSAGEM")) {
                 UsuarioBEAN usuario1 = (UsuarioBEAN) entradaObjeto.readObject();
                 UsuarioBEAN usuario2 = (UsuarioBEAN) entradaObjeto.readObject();
                 String mensagem = receberMensagem(usuario1, usuario2);
                 saida.writeUTF(mensagem);
                 saida.flush();
-                System.out.println(cliente.toString());
-                System.out.println(mensagem);
+//                System.out.println(cliente.toString());
+//                System.out.println(mensagem);
             }
         } catch (Exception ex) {
 
@@ -202,7 +204,7 @@ public class EspacoCliente extends Thread {
 
     // #########################################################################
     private synchronized String receberMensagem(UsuarioBEAN usuario1, UsuarioBEAN usuario2) {
-        String retorno="";
+        String retorno = "";
         ConversaBEAN conversa = new ConversaBEAN(0, usuario1.getId(), usuario2.getId());
         int codigo = controle.findIdConversa(conversa);
         // Esse IF serve para envitar criar 2 conversas diferentes
@@ -211,9 +213,9 @@ public class EspacoCliente extends Thread {
             codigo = controle.findIdConversa(conversa);
         }
         ArrayList<Aux_conversaBEAN> lista = controle.findConversas(codigo);
-        for(Aux_conversaBEAN umaConversa: lista){
-            retorno+=umaConversa.getMensage();
-            retorno+="\n";
+        for (Aux_conversaBEAN umaConversa : lista) {
+            retorno += umaConversa.getMensage();
+            retorno += "\n";
         }
         return retorno;
     }
@@ -231,7 +233,11 @@ public class EspacoCliente extends Thread {
     // #########################################################################
     private synchronized void salvarSolicitacao(UsuarioBEAN usuario1, UsuarioBEAN usuario2) {
         SolicitacaoBEAN solicitacao = new SolicitacaoBEAN(0, usuario1.getId(), usuario2.getId(), "ESPERANDO");
-        controle.addSolicitacao(solicitacao);
+        //Verificar se já existe uma solicitação, para não criar outra
+        int codigoSolicitacao = controle.findIdSolicitacao(solicitacao);
+        if(controle.findSolicitacao(codigoSolicitacao) == null){
+            controle.addSolicitacao(solicitacao);
+        }
     }
 
     // #########################################################################
@@ -253,6 +259,8 @@ public class EspacoCliente extends Thread {
         ArrayList<SolicitacaoBEAN> lista = controle.findSolicitacaoPorCliente(codigoCliente2);
         for (SolicitacaoBEAN umaSolicitacao : lista) {
             if (umaSolicitacao.getAceitar().equals("ACEITO") && umaSolicitacao.getCodigoCliente1() == codigoCliente1) {
+                umaSolicitacao.setAceitar("CONVERSANDO");
+                controle.updateSolicitacao(umaSolicitacao);
                 return true;
             }
         }
@@ -316,18 +324,30 @@ public class EspacoCliente extends Thread {
 
     // #########################################################################
     private synchronized UsuarioBEAN encontrarCompanhia(UsuarioBEAN usuario) {
+        int contador=0;
+        Random rand = new Random();
         ArrayList<UsuarioBEAN> usuarios = controle.listaUsuarios();
+        ArrayList<UsuarioBEAN> auxUsuarios = new ArrayList();
         for (UsuarioBEAN aux : usuarios) {
-            if (aux.getLogin() != usuario.getLogin() && aux.getPrefEsporte() == usuario.getPrefEsporte()
-                    || aux.getPrefGames() == usuario.getPrefGames()
-                    || aux.getPrefIdade() == usuario.getPrefIdade()
-                    || aux.getPrefMusica() == usuario.getPrefMusica()
-                    || aux.getPrefReligioso() == usuario.getPrefReligioso()
-                    || aux.getPrefSexo() == usuario.getPrefSexo()) {
-                return aux;
+            if (!aux.getLogin().equals(usuario.getLogin())) {
+                if (aux.getPrefEsporte() == usuario.getPrefEsporte()
+                        || aux.getPrefGames() == usuario.getPrefGames()
+                        || aux.getPrefIdade() == usuario.getPrefIdade()
+                        || aux.getPrefMusica() == usuario.getPrefMusica()
+                        || aux.getPrefReligioso() == usuario.getPrefReligioso()
+                        || aux.getPrefSexo() == usuario.getPrefSexo()) {
+                    //return aux;
+                    contador++;
+                    auxUsuarios.add(aux);
+                }
             }
+
         }
+        if(contador == 0){
         return null;
+        }else{
+            return auxUsuarios.get(rand.nextInt(contador));
+        }
     }
 
     // #########################################################################

@@ -8,6 +8,8 @@ package View;
 import Model.UsuarioBEAN;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,30 +33,52 @@ public class Inicio extends javax.swing.JFrame {
             desativarBotoes();
             this.usuario = usuario;
             this.setTitle(usuario.getNome());
-            conexao.getSaida().writeUTF("ENCONTRAR");
-            conexao.getSaida().flush();
-            conexao.getSaidaObjeto().writeObject(this.usuario);
-            conexao.getSaidaObjeto().flush();
-            usuarioCompativel = (UsuarioBEAN) conexao.getEntradaObjeto().readObject();
-            
-            byte imagem[] = (byte[]) conexao.getEntradaObjeto().readObject();
+            procurarUsuario();
 
-            ImageIcon im = new ImageIcon(imagem);
-            exibeimagem.setIcon(new ImageIcon(im.getImage().getScaledInstance(200, 200, Image.SCALE_DEFAULT)));
+            this.addWindowListener(new WindowAdapter() {
+                public void windowClosing(WindowEvent e) {
+                    //caixa de dialogo retorna um inteiro
+                    int resposta = JOptionPane.showConfirmDialog(null, "Deseja finalizar essa operação?", "Finalizar", JOptionPane.YES_NO_OPTION);
 
-            
-            if (usuarioCompativel == null) {
-                JOptionPane.showMessageDialog(null, "NENHUM USUARIO COMPATIVEL");
-            } else {
-                textNome.setText(usuarioCompativel.getNome());
-                textIdade.setText(Integer.toString(usuarioCompativel.getIdade()));
-                textDescricao.setText(usuarioCompativel.getDescricao());
-                reativarBotoes();
-            }
+                    //sim = 0, nao = 1
+                    if (resposta == 0) {
+                        try {
+                            conexao.getSaida().writeUTF("SAIR");
+                        } catch (IOException ex) {
+                            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        System.exit(0);
+                    }
+
+                }
+            });
         } catch (IOException ex) {
             Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        new receberSolicitacao().start();
+    }
+
+    public void procurarUsuario() throws IOException, ClassNotFoundException {
+        conexao.getSaida().writeUTF("ENCONTRAR");
+        conexao.getSaida().flush();
+        conexao.getSaidaObjeto().writeObject(this.usuario);
+        conexao.getSaidaObjeto().flush();
+        usuarioCompativel = (UsuarioBEAN) conexao.getEntradaObjeto().readObject();
+
+        byte imagem[] = (byte[]) conexao.getEntradaObjeto().readObject();
+
+        ImageIcon im = new ImageIcon(imagem);
+        exibeimagem.setIcon(new ImageIcon(im.getImage().getScaledInstance(200, 200, Image.SCALE_DEFAULT)));
+
+        if (usuarioCompativel == null) {
+            JOptionPane.showMessageDialog(null, "NENHUM USUARIO COMPATIVEL");
+        } else {
+            textNome.setText(usuarioCompativel.getNome());
+            textIdade.setText(Integer.toString(usuarioCompativel.getIdade()));
+            textDescricao.setText(usuarioCompativel.getDescricao());
+            reativarBotoes();
         }
     }
 
@@ -95,7 +119,7 @@ public class Inicio extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
 
         jPanel1.setMaximumSize(new java.awt.Dimension(200, 200));
@@ -279,45 +303,124 @@ public class Inicio extends javax.swing.JFrame {
         configuracao.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
+
     private void botaoConversarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoConversarActionPerformed
-        Chat chat;
+//        Chat chat;
+//        try {
+//            conexao.getSaida().writeUTF("ENVIAR SOLICITACAO");
+//            conexao.getSaidaObjeto().writeObject(usuario);
+//            conexao.getSaidaObjeto().flush();
+//            conexao.getSaidaObjeto().writeObject(usuarioCompativel);
+//            conexao.getSaidaObjeto().flush();
+//            if (conexao.getEntrada().readBoolean() == true) {
+//                JOptionPane.showMessageDialog(null, "POVE CONVERSAR");
+//            }
+//            chat = new Chat(usuario, usuarioCompativel);
+//            chat.setVisible(true);
+//        } catch (IOException ex) {
+//            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+
+        JOptionPane.showMessageDialog(null, "SOLICITAÇÃO DE CONVERSA ENVIADA");
+        new enviarSolicitacao().start();
+    }//GEN-LAST:event_botaoConversarActionPerformed
+
+    class enviarSolicitacao extends Thread {
+
+        public enviarSolicitacao() {
+        }
+
+        public void run() {
+            while (true) {
+                enviaMsg("ENVIAR SOLICITACAO");
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+                    break;
+                }
+            }
+        }
+    }
+
+    public synchronized void enviaMsg(String msg) {
         try {
-            conexao.getSaida().writeUTF("ENVIAR SOLICITACAO");
+            conexao.getSaida().writeUTF(msg);
+            conexao.getSaida().flush();
             conexao.getSaidaObjeto().writeObject(usuario);
             conexao.getSaidaObjeto().flush();
             conexao.getSaidaObjeto().writeObject(usuarioCompativel);
             conexao.getSaidaObjeto().flush();
-            if(conexao.getEntrada().readBoolean() == true){
-                 JOptionPane.showMessageDialog(null, "POVE CONVERSAR");
-            }
-          chat = new Chat(usuario,usuarioCompativel);
-           chat.setVisible(true);
-        } catch (IOException ex) {
-            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_botaoConversarActionPerformed
-
-    private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
-        try {
-            conexao.getSaida().writeUTF("VERIFICAR SOLICITACAO");
-            conexao.getSaida().flush();
-            conexao.getSaida().writeInt(usuario.getId());
-            UsuarioBEAN usuarioCompativel = (UsuarioBEAN)conexao.getEntradaObjeto().readObject();
-            if(usuarioCompativel == null){
-                JOptionPane.showMessageDialog(null, "AINDA NENHUMA SOLICITAÇÃO");
-            }else{
-                Chat chat = new Chat(usuario,usuarioCompativel);
+            if (conexao.getEntrada().readBoolean() == true) {
+                Chat chat = new Chat(usuario, usuarioCompativel);
                 chat.setVisible(true);
             }
+        } catch (IOException ex) {
+            Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
+//        try {
+//            conexao.getSaida().writeUTF("VERIFICAR SOLICITACAO");
+//            conexao.getSaida().flush();
+//            conexao.getSaida().writeInt(usuario.getId());
+//            UsuarioBEAN usuarioCompativel = (UsuarioBEAN) conexao.getEntradaObjeto().readObject();
+//            if (usuarioCompativel == null) {
+//                JOptionPane.showMessageDialog(null, "AINDA NENHUMA SOLICITAÇÃO");
+//            } else {
+//                Chat chat = new Chat(usuario, usuarioCompativel);
+//                chat.setVisible(true);
+//            }
+//        } catch (IOException ex) {
+//            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (ClassNotFoundException ex) {
+//            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+    }//GEN-LAST:event_jMenu2MouseClicked
+
+    class receberSolicitacao extends Thread {
+
+        public receberSolicitacao() {
+        }
+
+        public void run() {
+            while (true) {
+                enviaComando("VERIFICAR SOLICITACAO");
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+                    break;
+                }
+            }
+        }
+    }
+
+    public synchronized void enviaComando(String msg) {
+        try {
+            conexao.getSaida().writeUTF(msg);
+            conexao.getSaida().flush();
+            conexao.getSaida().writeInt(usuario.getId());
+            UsuarioBEAN usuarioCompativel2 = (UsuarioBEAN) conexao.getEntradaObjeto().readObject();
+            if (usuarioCompativel2 != null) {
+                JOptionPane.showMessageDialog(null, "ALGUÉM ESTA QUERENDO CONVERSAR");
+                Chat chat = new Chat(usuario, usuarioCompativel2);
+                chat.setVisible(true);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void botaoRecusarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoRecusarActionPerformed
+        try {
+            procurarUsuario();
         } catch (IOException ex) {
             Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jMenu2MouseClicked
-
-    private void botaoRecusarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoRecusarActionPerformed
-
     }//GEN-LAST:event_botaoRecusarActionPerformed
 
     private void jMenu3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu3MouseClicked

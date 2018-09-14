@@ -65,9 +65,9 @@ public class Chat extends javax.swing.JFrame {
         }
         public void run(){
             while(true){
-                enviaMsg("RECEBER MENSAGEM MENSASSEM");
+                enviaMsg("RECEBER MENSAGEM");
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(2000);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
                     break;

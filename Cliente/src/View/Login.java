@@ -179,6 +179,7 @@ public class Login extends javax.swing.JFrame {
             } else {
                 Inicio inicio = new Inicio(usuario);
                 inicio.setVisible(true);
+                this.setVisible(false);
             }
         } catch (IOException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);

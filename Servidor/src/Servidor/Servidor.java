@@ -13,9 +13,7 @@ public class Servidor {
                try {
                   ServerSocket server = new ServerSocket(3312);
                   while (true) {
-                      System.out.println("OUVINDO");
                     new EspacoCliente(server.accept()).start();
-                      System.out.println("Soltou");
                   }
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
